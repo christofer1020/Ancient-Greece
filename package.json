@@ -2,14 +2,15 @@
   "name": "ancient-greece",
   "version": "1.0.0",
   "private": true,
-  "description": "Ancient Greece — an animated, player-based story experience",
+  "description": "Ancient Greece \u2014 an animated, player-based story experience",
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0 --port 5173",
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0 --port 4173",
     "thumbs": "node tools/thumbs.mjs",
-    "qa": "node tools/qa.mjs"
+    "qa": "node tools/qa.mjs",
+    "artifact": "node tools/pack-artifact.mjs"
   },
   "dependencies": {
     "@fontsource/cinzel": "^5.2.0",

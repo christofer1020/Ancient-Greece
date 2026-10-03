@@ -3,6 +3,13 @@ import gsap from 'gsap';
 import { CHAPTERS, ICONS, TOTAL } from '../data/chapters.js';
 import { Scene } from './scene.js';
 import { clamp } from '../art/util.js';
+import { THUMBS } from '../data/thumbs.js';
+
+// Storage can be missing or throw (private windows, sandboxed frames), so it is only ever a convenience.
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch { /* ignore */ } },
+};
 
 const $ = (id) => document.getElementById(id);
 const fmt = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
@@ -35,7 +42,7 @@ export class Player {
     this.capKey = -2;
     this.lastUI = {};
     this.captionsOn = params.cc !== '0';
-    this.soundOn = params.sound === '0' ? false : (localStorage.getItem('ag.sound') !== '0');
+    this.soundOn = params.sound === '0' ? false : (store.get('ag.sound') !== '0');
     this.uiHideTimer = null;
     this.advancing = false;
 
@@ -70,7 +77,7 @@ export class Player {
       const b = document.createElement('button');
       b.type = 'button'; b.className = 'mcard'; b.dataset.i = i;
       b.innerHTML = `
-        <span class="mcard-img"><img src="${import.meta.env.BASE_URL}thumbs/${ch.id}.jpg" alt="" loading="lazy" onerror="this.remove()"><span class="mcard-letter">${ch.letter}</span><span class="mcard-now">Now playing</span></span>
+        <span class="mcard-img"><img src="${THUMBS[ch.id]}" alt="" loading="lazy" onerror="this.remove()"><span class="mcard-letter">${ch.letter}</span><span class="mcard-now">Now playing</span></span>
         <span class="mcard-body"><span class="mcard-kicker">${ch.kicker}</span><span class="mcard-title">${ch.title}</span><span class="mcard-sub">${ch.sub}</span><span class="mcard-dur">${fmt(ch.duration)} min</span></span>`;
       b.addEventListener('click', () => this.goTo(i));
       li.appendChild(b);
@@ -211,7 +218,7 @@ export class Player {
     this.el.chipTitle.textContent = ch.title;
     this.segEls.forEach((s, k) => { s.classList.toggle('current', k === i); s.classList.toggle('done', k < i); });
     this.cards.forEach((c, k) => c.classList.toggle('current', k === i));
-    document.title = `${ch.title} — Ancient Greece`;
+    document.title = 'Ancient Greece';
   }
 
   // ------------------------------------------------------------------ navigation
@@ -222,7 +229,7 @@ export class Player {
     this.master.play();
     this.state = 'title';
     this.idx = -1;
-    document.title = 'Ancient Greece — An Animated Story';
+    document.title = 'Ancient Greece';
     this.syncButtons();
     this.audio.setChapter(-1);
   }
@@ -423,7 +430,7 @@ export class Player {
   setCaptions(on) { this.captionsOn = on; this.syncButtons(); }
   setSound(on, quiet = false) {
     this.soundOn = on;
-    localStorage.setItem('ag.sound', on ? '1' : '0');
+    store.set('ag.sound', on ? '1' : '0');
     this.audio.setMuted(!on);
     this.syncButtons();
   }

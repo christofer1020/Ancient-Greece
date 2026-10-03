@@ -39,7 +39,6 @@ export function build(sc) {
   sc.add(sea, S.island({ x: 560, y: 632, w: 260, h: 34, color: '#7B88A6', light: '#BDB6BA', seed: 3 }));
   sc.add(sea, S.island({ x: 1040, y: 634, w: 190, h: 24, color: '#7C88A5', light: '#BDB6BA', seed: 7 }));
   // Crete: island with a Minoan palace
-  const crete = S.px ? '' : '';
   sc.add(sea, `<g transform="translate(350 640)">${S.island({ x: 0, y: 0, w: 330, h: 54, color: '#8C93A6', light: '#CBC1B6', seed: 12, trees: true })}<g transform="translate(-4 -28)">${S.minoanPalace({ s: 0.34 })}</g></g>`);
   sc.add(sea, S.drifter(`<g transform="translate(650 640)">${S.ship({ type: 'merchant', s: 0.22, hull: '#3A2D29' })}</g>`, { vx: 3, bob: 0 }));
 
