@@ -37,9 +37,9 @@ export function build(sc) {
   const glow = sc.layer('glow', 0.1);
   const farC = sc.layer('farclouds', 0.18);
   const peaks = sc.layer('peaks', 0.3);
-  const peg = sc.layer('pegasus', 0.35);
   const midC = sc.layer('midclouds', 0.55);
   const world = sc.layer('world', 1.0);
+  const peg = sc.layer('pegasus', 1.0);
   const bank = sc.layer('bank', 1.0);
   const earth = sc.layer('earth', 1.0);
   const nearC = sc.layer('nearclouds', 1.45);
@@ -57,7 +57,7 @@ export function build(sc) {
   sc.add(peaks, S.hills({ base: 1130, amp: 40, top: '#8E9B74', bottom: '#66744F', seed: 9, freq: 0.005 }));
 
   // ------------------------------------------------------------------ Pegasus
-  const pegasus = sc.horse(peg, { x: -420, y: 330, s: 0.9, wings: true, saddle: false, coat: '#F4EBD6', coatLt: '#FFFFFF', mane: '#D8C79D', seed: 3 });
+  const pegasus = sc.horse(peg, { x: -250, y: 44, s: 0.62, wings: true, saddle: false, coat: '#F4EBD6', coatLt: '#FFFFFF', mane: '#D8C79D', seed: 3 });
   pegasus.p.gAmp = 1; pegasus.p.facing = 1; pegasus.p.shadow = 0; pegasus.p.pitch = -4;
 
   // ------------------------------------------------------------------ mid cloud sea
@@ -135,8 +135,6 @@ export function build(sc) {
   });
 
   // Prometheus (summit first, then the earth)
-  const prom = sc.fig(world, { x: 676, y: FY, s: 1.5, outfit: 'chiton', color: '#C77B4B', trim: C.sandstone, beard: '#2b211a', facing: 1 });
-  prom.set('relaxed'); prom.hold('F', 'torch', { mode: 'world', rot: 0 }); prom.p.armF = 40; prom.p.elbowF = 70; prom.p.opacity = 0;
 
   // ------------------------------------------------------------------ cloud bank hides the crag base
   const bankClouds = [];
@@ -170,6 +168,10 @@ export function build(sc) {
   v1.p.facing = 1; v2.p.facing = 1; v3.p.facing = 1;
   sc.tick((t) => { v3.p.armF = 70 + Math.sin(t * 1.4) * 4; });
 
+  // Prometheus is drawn after the hills, cloud bank and villagers so his legs and torch are never buried
+  const prom = sc.fig(earth, { x: 676, y: FY, s: 1.5, outfit: 'chiton', color: '#C77B4B', trim: C.sandstone, beard: '#2b211a', facing: 1 });
+  prom.set('relaxed'); prom.hold('F', 'torch', { mode: 'world', rot: 0 }); prom.p.armF = 40; prom.p.elbowF = 70; prom.p.opacity = 0;
+
   // ------------------------------------------------------------------ near clouds (the rush as we rise)
   const nearList = [[-300, 900, 3.4, 'cool', 61, 1.8], [1100, 820, 3.6, 'storm', 62, 1.8], [1900, 700, 3.4, 'cool', 63, 1.6], [200, 560, 3.2, 'cool', 64, 1.6], [1300, 420, 3.4, 'white', 65, 1.7], [-100, 240, 3.6, 'white', 66, 1.8], [900, 80, 3.6, 'white', 67, 1.8], [1700, -120, 3.2, 'white', 68, 1.6], [100, -300, 3.4, 'warm', 69, 1.7], [600, 1000, 3.2, 'storm', 70, 1.6]];
   nearList.forEach(([x, y, s, tone, seed, w]) => sc.add(nearC, S.cloud({ x, y, s, tone, seed, w, op: 0.92 })));
@@ -195,6 +197,11 @@ export function build(sc) {
   sc.pan(19.4, 3.6, { y: 930, x: 800, z: 1.0 }, 'power3.inOut');
   sc.pan(23, 8, { z: 1.14, y: 920 }, 'sine.inOut');
   sc.pan(31, 3, { z: 1.0, y: 880 }, 'sine.inOut');
+
+  // the rush of near clouds belongs to the climb and the descent; they must not bury the summit
+  gsap.set(nearC.g, { opacity: 1 });
+  tl.to(nearC.g, { opacity: 0, duration: 1.4, ease: 'sine.inOut' }, 9.0);
+  tl.to(nearC.g, { opacity: 1, duration: 0.8, ease: 'sine.inOut' }, 19.2);
 
   // storm light: gloom on earth, golden at the summit
   gsap.set(tint, { opacity: 0.55 });
@@ -230,9 +237,11 @@ export function build(sc) {
   gods.forEach((g, i) => { tl.to(g.f.p, { head: (i % 2 ? 5 : -5), duration: 1.2, ease: 'sine.inOut' }, 12 + i * 0.1); });
 
   // Pegasus crosses the sky
-  tl.fromTo(pegasus.p, { x: -420, y: 330 }, { x: 2200, y: 150, duration: 9.4, ease: 'sine.inOut' }, 16.2);
-  tl.fromTo(pegasus.p, { pitch: -6 }, { pitch: 10, duration: 9.4, ease: 'sine.inOut' }, 16.2);
-  sc.cue('whinny', 18.4);
+  tl.fromTo(pegasus.p, { x: -250 }, { x: 1950, duration: 4.2, ease: 'power1.inOut' }, 15.2);
+  tl.to(pegasus.p, { y: -26, duration: 2.1, ease: 'sine.out' }, 15.2); // rises over the roof ...
+  tl.to(pegasus.p, { y: 52, duration: 2.1, ease: 'sine.in' }, 17.3);   // ... and settles toward the far cloud
+  tl.fromTo(pegasus.p, { pitch: -6 }, { pitch: 8, duration: 4.2, ease: 'sine.inOut' }, 15.2);
+  sc.cue('whinny', 16.2);
 
   // Prometheus: torch at the summit edge, then vanishes into light
   tl.to(prom.p, { opacity: 1, duration: 0.6 }, 16.4);

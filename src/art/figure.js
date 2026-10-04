@@ -324,9 +324,10 @@ export class Figure {
 
     // skirt: hem follows the swinging legs
     if (r.skirt) {
+      const dmp = Math.max(lF, lB) < 60 ? this.damp : 1; // seated: let the hem follow the folded legs
       const hemPt = (a, k) => {
         const d = this.hem * (L1 + L2);
-        a *= this.damp; k *= this.damp;
+        a *= dmp; k *= dmp;
         if (d <= L1) return [Math.sin(a * D2R) * d, Math.cos(a * D2R) * d];
         const kx = Math.sin(a * D2R) * L1, ky = Math.cos(a * D2R) * L1;
         const dd = d - L1;

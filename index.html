@@ -11,7 +11,8 @@
     /* critical: avoid a flash of unstyled overlays before the main stylesheet arrives */
     html,body{margin:0;height:100%;background:#1A1620}
     #app{position:fixed;inset:0;overflow:hidden}
-    .endcard,.menu,.curtain{visibility:hidden;opacity:0}
+    .endcard,.menu{visibility:hidden;opacity:0}
+    .curtain{visibility:hidden}
   </style>
 </head>
 <body>
@@ -40,7 +41,7 @@
         <span class="chip-letter" id="chipLetter">Α</span>
         <span class="chip-text"><span class="chip-kicker" id="chipKicker">Chapter One</span><span class="chip-title" id="chipTitle">Birth of the Greek World</span></span>
       </div>
-      <button class="btn-text" id="btnMenuTop" type="button" aria-haspopup="dialog" aria-controls="menu">
+      <button class="btn-text" id="btnMenuTop" type="button" aria-label="Chapters" title="Chapters" aria-haspopup="dialog" aria-controls="menu">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
         <span>Chapters</span>
       </button>
@@ -123,7 +124,7 @@
     </div>
 
     <!-- ===== END CARD ===== -->
-    <section class="endcard" id="endcard" aria-labelledby="endTitle">
+    <section class="endcard" id="endcard" role="dialog" aria-modal="true" aria-labelledby="endTitle">
       <div class="end-inner">
         <h2 id="endTitle">What remains is the habit<br />of asking questions.</h2>
         <p>Ancient Greece — an animated story</p>

@@ -28,7 +28,6 @@ export function build(sc) {
   const AX = P(acro, 800, 2500);
   sc.add(acro, `<g transform="translate(${AX} 700)">${citadel({ w: 900, h: 330, seed: 12 })}</g>`);
   sc.add(acro, `<g transform="translate(${AX} ${700 - 330 - 8})">${S.temple({ w: 520, h: 150, steps: 3, tone: [C.ivory, '#DDC49A', '#9C8467'] })}</g>`);
-  sc.add(acro, S.cypress(AX - 480, 380, 90, '#475733')); sc.add(acro, S.cypress(AX + 470, 380, 82, '#475733'));
   // gymnasium porch for the grove
   sc.add(mid, S.hills({ base: 676, amp: 12, top: '#A6B27A', bottom: '#8A9A62', seed: 9, freq: 0.01, x0: -1500, x1: 4200 }));
   sc.add(mid, `<g transform="translate(${P(mid, 1180, 1000)} 760)">${S.stoa({ w: 820, h: 170, cols: 12 })}</g>`);
@@ -128,9 +127,9 @@ export function build(sc) {
   // chorus + actors
   const chorus = [0, 1, 2, 3, 4].map((i) => sc.fig(ppl, { x: CX - 270 + i * 120, y: CY + 52 + (i % 2) * 8, s: 1.5, outfit: 'robe', color: ['#D8C9A3', C.parchment, '#C6D0DD', '#E4C9A3', '#C9D0A8'][i], mask: i % 2 ? 'sad' : 'happy', trim: C.sandstone, facing: 1 }));
   chorus.forEach((c) => { c.set({ armF: 100, elbowF: 30, armB: 96, elbowB: 30 }); });
-  const actorA = sc.fig(ppl, { x: CX - 110, y: CY + 104, s: 2.05, outfit: 'robe', color: '#7A2D4A', cloak: '#E0BE62', cloakType: 'drape', trim: '#E0BE62', mask: 'sad', facing: 1 });
+  const actorA = sc.fig(ppl, { x: CX - 90, y: CY + 104, s: 2.05, outfit: 'robe', color: '#7A2D4A', cloak: '#E0BE62', cloakType: 'drape', trim: '#E0BE62', mask: 'sad', facing: 1 });
   actorA.set({ armF: 148, elbowF: 22, armB: 36, elbowB: 60, head: -4 });
-  const actorB = sc.fig(ppl, { x: CX + 120, y: CY + 100, s: 2.0, outfit: 'chiton', color: '#C8A04A', trim: C.terracotta, mask: 'happy', facing: -1, hem: 0.4 });
+  const actorB = sc.fig(ppl, { x: CX + 150, y: CY + 100, s: 2.0, outfit: 'chiton', color: '#C8A04A', trim: C.terracotta, mask: 'happy', facing: -1, hem: 0.4 });
   actorB.set({ armF: 100, elbowF: 40, armB: 70, elbowB: 50 });
   sc.tick((t) => { chorus.forEach((c, i) => { c.p.armF = 104 + Math.sin(t * 1.6 + i * 0.4) * 30; c.p.armB = 98 + Math.sin(t * 1.6 + i * 0.4 + 0.4) * 28; }); });
 
@@ -181,8 +180,10 @@ export function build(sc) {
   plato.go(tl, 10.8, 0.8, { head: 20 });
 
   // theatre: chorus steps left and right; actors declaim
-  const shift = (f, dx, at) => f.walk(tl, at, f.p.x + dx, 2.0, { ease: 'sine.inOut', face: false });
-  chorus.forEach((c, i) => { c._wx = c.p.x; shift(c, -50, 18.0); });
+  // each step is relative to where the chorus member will actually be when it starts (Figure tracks that in _wx)
+  chorus.forEach((c) => { c._wx = c.p.x; });
+  const shift = (f, dx, at) => f.walk(tl, at, f._wx + dx, 2.0, { ease: 'sine.inOut', face: false });
+  chorus.forEach((c, i) => { shift(c, -50, 18.0); });
   chorus.forEach((c, i) => { shift(c, 100, 20.6); });
   chorus.forEach((c, i) => { shift(c, -50, 23.2); });
   tl.to(actorA.p, { armF: 70, elbowF: 60, duration: 1.2, yoyo: true, repeat: 5, ease: 'sine.inOut' }, 18.4);

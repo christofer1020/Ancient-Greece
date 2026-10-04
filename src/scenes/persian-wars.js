@@ -191,7 +191,7 @@ export function build(sc) {
     const xerx = sc.fig(fg, { x: 1430, y: 590, s: 1.45, outfit: 'robe', color: '#7A2D4A', trim: '#E0BE62', hat: 'turban', hatColor: '#E0BE62', cloak: '#7A2D4A', facing: -1 });
     xerx.set('sit'); xerx.p.armF = 80; xerx.p.elbowF = 100; xerx.p.legF = 70; xerx.p.kneeF = 90;
     sal.xerx = xerx;
-    sc.add(fg, `<path d="M1180 560 L1680 560 L1630 500 L1230 500 Z" fill="${C.red}" stroke="${darken(C.red, .4)}" stroke-width="2" transform="translate(0 -170)"/><line x1="1220" y1="340" x2="1220" y2="612" stroke="#6E5420" stroke-width="5"/><line x1="1640" y1="340" x2="1640" y2="612" stroke="#6E5420" stroke-width="5"/>`);
+    sc.add(fg, `<path d="M1180 560 L1680 560 L1630 500 L1230 500 Z" fill="${C.red}" stroke="${darken(C.red, .4)}" stroke-width="2" transform="translate(0 -170)"/><line x1="1220" y1="340" x2="1220" y2="700" stroke="#6E5420" stroke-width="5"/><line x1="1640" y1="340" x2="1640" y2="612" stroke="#6E5420" stroke-width="5"/>`);
     // fleets: Persians crowded on the right, Greek triremes from the left
     const persY = [[1080, 690], [1180, 706], [1000, 712], [1260, 722], [1120, 736], [1040, 756], [1210, 760]];
     persY.forEach(([x, y], i) => {
@@ -213,7 +213,7 @@ export function build(sc) {
   // ----------------------------------------------------------- scene-wide overlays
   const ui = sc.layer('ui', 0);
   const tag = (text, sub, id) => {
-    const el = sc.add(ui, `<g class="tag" opacity="0"><text x="70" y="156" font-family="Jost, sans-serif" font-weight="500" font-size="15" letter-spacing="7" fill="${C.ivory}" opacity=".85">${sub}</text>
+    const el = sc.add(ui, `<g class="tag" opacity="0"><text x="70" y="156" font-family="Jost, sans-serif" font-weight="500" font-size="15" letter-spacing="7" fill="${C.ivory}" stroke="rgba(20,10,10,.6)" stroke-width="3.5" paint-order="stroke" stroke-linejoin="round">${sub}</text>
       <text x="70" y="108" font-family="Cinzel, serif" font-weight="700" font-size="44" letter-spacing="6" fill="${C.ivory}" stroke="rgba(20,10,10,.55)" stroke-width="5" paint-order="stroke" stroke-linejoin="round">${text}</text><path d="M70 126 h96" stroke="${C.terracotta}" stroke-width="3"/></g>`);
     return el;
   };

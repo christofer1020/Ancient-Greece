@@ -52,6 +52,7 @@ export class Player {
     this.bind();
     this.layout();
     this.syncButtons();
+    this.syncInert();
     gsap.ticker.add(this.tick);
     addEventListener('resize', () => this.layout());
     document.addEventListener('visibilitychange', () => { if (document.hidden && this.state === 'playing') this.pause(); });
@@ -87,9 +88,10 @@ export class Player {
   }
 
   bind() {
-    const on = (id, fn) => $(id).addEventListener('click', (e) => { this.audio.unlock(); fn(e); });
+    // A mouse/touch click (detail > 0) must not leave the button focused, or Space would re-press it instead of play/pause.
+    const on = (id, fn) => $(id).addEventListener('click', (e) => { this.audio.unlock(); if (e.detail) e.currentTarget.blur(); fn(e); });
     on('btnBegin', () => this.goTo(0));
-    on('btnIntroMenu', () => this.openMenu());
+    on('btnIntroMenu', (e) => this.openMenu(e));
     on('btnPlay', () => this.togglePlay());
     on('btnPrev', () => this.goTo(Math.max(0, this.idx - 1)));
     on('btnNext', () => this.next());
@@ -97,11 +99,11 @@ export class Player {
     on('btnCC', () => this.setCaptions(!this.captionsOn));
     on('btnSound', () => this.setSound(!this.soundOn));
     on('btnFull', () => this.toggleFull());
-    on('btnMenuTop', () => this.openMenu());
+    on('btnMenuTop', (e) => this.openMenu(e));
     on('btnMenuClose', () => this.closeMenu());
     on('btnHome', () => this.goTitle());
     on('btnEndReplay', () => this.goTo(0));
-    on('btnEndMenu', () => this.openMenu());
+    on('btnEndMenu', (e) => this.openMenu(e));
     this.el.menu.addEventListener('click', (e) => { if (e.target === this.el.menu) this.closeMenu(); });
     if (!document.fullscreenEnabled) this.el.full.style.display = 'none';
 
@@ -150,7 +152,9 @@ export class Player {
       const k = e.key;
       if (this.menuOpen) { if (k === 'Escape') { this.closeMenu(); e.preventDefault(); } return; }
       if (k === ' ' || k === 'k' || k === 'K') {
-        if (document.activeElement && document.activeElement.tagName === 'BUTTON' && k === ' ') return; // let buttons handle their own activation
+        // let a keyboard-focused button handle its own Space; a mouse-focused one must not swallow play/pause
+        const ae = document.activeElement;
+        if (k === ' ' && ae && ae.tagName === 'BUTTON') return;
         e.preventDefault();
         if (this.state === 'title') this.goTo(0); else this.togglePlay();
       } else if (k === 'ArrowRight') { if (this.idx >= 0) this.next(); }
@@ -199,7 +203,7 @@ export class Player {
     mod.build(sc, i < 0 ? null : CHAPTERS[i]);
     if (i >= 0) sc.end(CHAPTERS[i].duration);
     this.master = sc.tl;
-    this.master.time(0);
+    this.master.time(0, true);
     sc.size(); sc.sizeFx();
     sc.frame(0, false);
     this.idx = i;
@@ -265,7 +269,7 @@ export class Player {
 
     if (!curtain) {
       this.mount(i, mod);
-      this.master.time(at);
+      this.master.time(at, true);
       this.scene.frame(0, false);
       this.setState(play ? 'playing' : 'paused');
       if (play) this.master.play();
@@ -294,7 +298,7 @@ export class Player {
     tl.fromTo(E.cpIcon, { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.9, ease: 'back.out(2)' }, 'rev+=1.1');
     tl.addLabel('out', 'rev+=3.1');
     tl.call(() => {
-      this.master.time(at);
+      this.master.time(at, true);
       this.setState(play ? 'playing' : 'paused');
       if (play) this.master.play();
       this.setSound(this.soundOn, true);
@@ -332,12 +336,12 @@ export class Player {
 
   next() {
     if (this.idx < 0) return this.goTo(0);
-    if (this.idx >= N - 1) return this.showEnd();
+    if (this.idx >= N - 1) { if (this.state !== 'curtain') this.showEnd(); return; }
     this.goTo(this.idx + 1);
   }
 
   replay() {
-    if (this.idx < 0) return;
+    if (this.idx < 0 || this.state === 'curtain') return;
     this.hideEnd();
     this.seek(0);
     this.userPaused = false;
@@ -350,6 +354,7 @@ export class Player {
   setState(s) {
     this.state = s;
     this.syncButtons();
+    this.syncInert();
   }
 
   syncButtons() {
@@ -400,7 +405,7 @@ export class Player {
     if (!this.master || this.idx < 0) return;
     const D = CHAPTERS[this.idx].duration;
     t = clamp(t, 0, D - 0.05);
-    this.master.time(t);
+    this.master.time(t, true);
     this.advancing = false;
     if (this.state === 'ended') { this.hideEnd(); this.setState(this.userPaused ? 'paused' : 'playing'); }
     this.scene.frame(0, false);
@@ -439,27 +444,52 @@ export class Player {
     else document.documentElement.requestFullscreen?.().catch(() => {});
   }
 
-  openMenu() {
+  openMenu(e) {
+    // only a keyboard-opened menu hands focus back on close; after a mouse click, Space must stay play/pause
+    this.menuOpener = e && e.detail === 0 ? document.activeElement : null;
     this.menuOpen = true; this.app.dataset.menu = 'open'; this.el.menu.setAttribute('aria-hidden', 'false');
     this.menuPrev = this.state === 'playing';
     if (this.menuPrev) this.pause(true);
+    this.syncInert();
     const cur = this.cards[Math.max(0, this.idx)];
-    setTimeout(() => cur?.focus({ preventScroll: true }), 80);
+    cur?.focus({ preventScroll: true });
+    cur?.scrollIntoView({ block: 'nearest' });
   }
   closeMenu(resume = true) {
     if (!this.menuOpen) return;
     this.menuOpen = false; this.app.dataset.menu = ''; this.el.menu.setAttribute('aria-hidden', 'true');
+    this.syncInert();
     if (resume && this.menuPrev && this.state === 'paused') this.play();
     this.menuPrev = false;
+    // hand focus back to whatever opened the menu (unless we are navigating away)
+    const o = this.menuOpener; this.menuOpener = null;
+    if (resume && o && o.isConnected && !o.closest('[inert]')) o.focus({ preventScroll: true });
   }
 
   showEnd() {
     if (this.state === 'ended') return;
     this.setState('ended');
     this.app.dataset.end = 'on';
+    this.syncInert();
     this.audio.setChapter('end');
+    setTimeout(() => { if (this.app.dataset.end === 'on' && !this.menuOpen) $('btnEndReplay').focus({ preventScroll: true }); }, 120);
   }
-  hideEnd() { this.app.dataset.end = ''; }
+  hideEnd() {
+    if (this.app.dataset.end !== 'on') return;
+    this.app.dataset.end = '';
+    this.syncInert();
+    if ($('endcard').contains(document.activeElement)) $('btnPlay').focus({ preventScroll: true });
+  }
+
+  /** Everything that is covered or invisible must also be unreachable by keyboard and screen readers. */
+  syncInert() {
+    const menu = !!this.menuOpen, end = this.app.dataset.end === 'on', title = this.state === 'title';
+    const set = (el, v) => { if (el && el.inert !== v) el.inert = v; };
+    set($('topbar'), menu || end || title);
+    set($('player'), menu || end || title);
+    set($('intro'), menu || !title);
+    set($('endcard'), menu || !end);
+  }
 
   // ------------------------------------------------------------------ captions
   setCaption(text, instant = false) {

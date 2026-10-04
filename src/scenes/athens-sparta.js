@@ -23,8 +23,6 @@ export function build(sc) {
   sc.add(aFar, `<rect x="-1400" y="606" width="4400" height="40" fill="#9DB6CC" opacity=".6"/>`);
   sc.add(aAcro, `<g transform="translate(300 ${GY + 14})">${citadel({ w: 640, h: 270, seed: 4 })}</g>`);
   sc.add(aAcro, `<g transform="translate(300 ${GY + 14 - 270 - 8})">${S.temple({ w: 430, h: 140, steps: 3, tone: [C.ivory, '#DDC49A', '#9C8467'] })}</g>`);
-  sc.add(aAcro, S.cypress(48, GY - 250, 96, '#475733'));
-  sc.add(aAcro, S.cypress(560, GY - 256, 88, '#475733'));
   sc.add(aMid, S.hills({ base: 640, amp: 14, top: '#A9B278', bottom: '#8A9A62', seed: 8, freq: 0.01 }));
   sc.add(aMid, `<g transform="translate(1180 ${GY + 112})">${S.stoa({ w: 560, h: 150, cols: 9 })}</g>`);
   for (const [x, y, s] of [[660, 650, 0.8], [780, 640, 0.6], [880, 660, 0.9], [1520, 650, 0.8]]) sc.add(aMid, S.olive(x, y, s, { leaf: '#7C8A55' }));
@@ -104,7 +102,6 @@ export function build(sc) {
   sc.tick((t) => {
     boys.forEach((b, i) => { const k = Math.sin(t * 3.4 + (i % 2) * Math.PI); b.p.armF = 80 + k * 34; b.p.elbowF = 50 + k * 26; b.p.lean = 6 + k * 6; });
     officer.p.armF = 70 + Math.sin(t * 1.3) * 26; officer.p.elbowF = 50;
-    phalanx.forEach((f, i) => { f.p.lean = 3 + Math.max(0, Math.sin(t * 2.6 + (i % 4) * 0.25)) * 4; });
   });
   sc.add(sFig, S.fire({ x: 1130, y: GY + 96, s: 0.9 }));
   sc.add(sFig, `<g transform="translate(1560 ${GY + 120})"><line x1="0" y1="0" x2="0" y2="-190" stroke="#4B3A2A" stroke-width="4"/><path d="M0 -188 L62 -182 L56 -138 L62 -94 L0 -100 Z" fill="${C.red}" stroke="${darken(C.red, .4)}" stroke-width="1"/><path d="M18 -112 L31 -160 L44 -112 M22 -126 H40" fill="none" stroke="${C.ivory}" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></g>`);
@@ -113,18 +110,25 @@ export function build(sc) {
     <path d="M1090 126 L1118 66 L1146 126" fill="none" stroke="${C.ivory}" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><path d="M1090 126 L1118 66 L1146 126" fill="none" stroke="${C.red}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity=".0"/></g>`);
 
   // runners meeting at the divider (end)
-  const runA = sc.fig(aFig, { x: 150, y: 738, s: 1.6, outfit: 'chiton', color: C.blue, trim: C.ivory, wreath: true, facing: 1, opacity: 0 });
+  const runA = sc.fig(aFig, { x: -90, y: 812, s: 1.6, outfit: 'chiton', color: C.blue, trim: C.ivory, wreath: true, facing: 1 });
   runA.hold('B', 'laurelBranch', { mode: 'world', rot: 0 });
-  const runS = sc.fig(sFig, { x: 1500, y: 738, s: 1.6, outfit: 'chiton', color: C.red, trim: C.ivory, helmet: false, wreath: true, facing: -1, opacity: 0 });
+  const runS = sc.fig(sFig, { x: 1700, y: 812, s: 1.6, outfit: 'chiton', color: C.red, trim: C.ivory, helmet: false, wreath: true, facing: -1 });
   runS.hold('B', 'laurelBranch', { mode: 'world', rot: 0 });
 
   // divider (screen-fixed) + medallion
   const div = document.createElement('div');
   div.style.cssText = 'position:absolute;top:0;bottom:0;left:50%;width:6px;margin-left:-3px;background:linear-gradient(to bottom,#F8EBCB,#E7C78F 60%,#F8EBCB);box-shadow:0 0 22px rgba(255,226,160,.8),0 0 2px rgba(255,255,255,.9);opacity:0';
   const med = document.createElement('div');
-  med.style.cssText = 'position:absolute;left:50%;top:50%;width:78px;height:78px;margin:-39px 0 0 -39px;border-radius:50%;background:#F2E9D4;border:2px solid #8A5A2B;display:grid;place-items:center;opacity:0;box-shadow:0 8px 24px rgba(0,0,0,.35)';
+  med.style.cssText = 'position:absolute;left:50%;top:32%;width:78px;height:78px;margin:-39px 0 0 -39px;border-radius:50%;background:#F2E9D4;border:2px solid #8A5A2B;display:grid;place-items:center;opacity:0;box-shadow:0 8px 24px rgba(0,0,0,.35)';
   med.innerHTML = `<svg viewBox="0 0 24 24" width="46" height="46" fill="none" stroke="#5E6A3A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21C9 15 14 10 21 3"/><path d="M10 15c-2-1-4-1-5-3 2-1 4 0 5 3zM14.5 10.5c-2-2-2-4-2-6 2 1 3.5 3 2 6zM17.5 7c0-2 1.5-3.5 3.5-4"/></svg>`;
   div.appendChild(med);
+  sc.tick(() => {
+    const px = Math.round(Math.max(40, Math.min(78, 95 * sc.unit)));
+    if (med._px !== px) {
+      med._px = px; med.style.width = med.style.height = px + 'px'; med.style.margin = `${-px / 2}px 0 0 ${-px / 2}px`;
+      const g = med.firstElementChild; g.setAttribute('width', px * 0.59); g.setAttribute('height', px * 0.59);
+    }
+  });
   sc.root.appendChild(div);
   const tint = sc.tint('#1c2550');
   sc.particle('motes', { n: 30, color: ['#FFF0C8', '#FFD9A0'], op: 0.4, size: 2, vx: 0.004, vy: -0.002 });
@@ -139,12 +143,11 @@ export function build(sc) {
     tl.to(clipS, { clipPath: `inset(0 0 0 ${d}%)`, webkitClipPath: `inset(0 0 0 ${d}%)`, duration: dur, ease }, at);
     tl.to(div, { left: `${d}%`, duration: dur, ease }, at);
   };
-  tl.set(clipA, { clipPath: 'inset(0 50% 0 50%)' }, 0);
   tl.to(div, { opacity: 1, duration: 0.8 }, 0.2);
-  tl.to(clipA, { clipPath: 'inset(0 50% 0 0%)', webkitClipPath: 'inset(0 50% 0 0%)', duration: 2.4, ease: 'power3.out' }, 0.4);
-  tl.to(clipS, { clipPath: 'inset(0 0% 0 50%)', webkitClipPath: 'inset(0 0% 0 50%)', duration: 2.4, ease: 'power3.out' }, 0.4);
+  tl.fromTo(clipA, { clipPath: 'inset(0 50% 0 50%)', webkitClipPath: 'inset(0 50% 0 50%)' }, { clipPath: 'inset(0 50% 0 0%)', webkitClipPath: 'inset(0 50% 0 0%)', duration: 2.4, ease: 'power3.out' }, 0.4);
+  tl.fromTo(clipS, { clipPath: 'inset(0 50% 0 50%)', webkitClipPath: 'inset(0 50% 0 50%)' }, { clipPath: 'inset(0 0% 0 50%)', webkitClipPath: 'inset(0 0% 0 50%)', duration: 2.4, ease: 'power3.out' }, 0.4);
   tl.to([lblA, lblS], { opacity: 1, duration: 1.2, ease: 'power2.out' }, 2.4);
-  win(8.0, 2.0, 82);
+  win(8.0, 2.0, 92);
   win(16.6, 2.2, 20);
   win(25.4, 2.4, 50);
 
@@ -166,6 +169,8 @@ export function build(sc) {
     phalanx.forEach((f, i) => {
       f.go(tl, t0 + (i % 4) * 0.03, 0.18, { armB: 92, elbowB: 12, lean: 14 }, 'power3.out');
       f.go(tl, t0 + 0.55, 0.45, { armB: 70, elbowB: 50, lean: 3 }, 'sine.inOut');
+      tl.to(f.p, { holdB: -38, duration: 0.2, ease: 'power3.out' }, t0 + (i % 4) * 0.03);   // spear levelled forward
+      tl.to(f.p, { holdB: 4, duration: 0.5, ease: 'sine.inOut' }, t0 + 0.6);
     });
     sc.shake(t0, 3, 0.25);
     sc.cue('thump', t0);
@@ -174,10 +179,9 @@ export function build(sc) {
   tl.set(officer.p, { facing: 1 }, 17.2);
 
   // the meeting at the games
-  tl.to(runA.p, { opacity: 1, duration: 0.01 }, 28.0);
-  tl.to(runS.p, { opacity: 1, duration: 0.01 }, 28.0);
-  runA.walk(tl, 28.0, 748, 3.6, { run: 0.6, ease: 'sine.out', face: false });
-  runS.walk(tl, 28.0, 852, 3.6, { run: 0.6, ease: 'sine.out', face: false });
+  // the runners come in from outside the frame, in front of the crowds, and rise to the meeting line
+  runA.walk(tl, 27.3, 748, 4.2, { y: 738, run: 0.6, ease: 'sine.out', face: false });
+  runS.walk(tl, 27.3, 852, 4.2, { y: 738, run: 0.6, ease: 'sine.out', face: false });
   runA.go(tl, 31.7, 0.8, { armB: 168, elbowB: 8 });
   runS.go(tl, 31.7, 0.8, { armB: 168, elbowB: 8 });
   tl.to(med, { opacity: 1, scale: 1, duration: 0.9, ease: 'back.out(2.2)' }, 32.0);

@@ -44,9 +44,18 @@ npm run build && npm run preview   # production build → http://localhost:4173/
 - **Audio** — fully procedural (`src/engine/audio.js`): sea, wind, crowd, fire and night beds; a generative lyre in Dorian / Phrygian / Mixolydian / Hijaz modes; frame drums; one-shot cues (thunder, clash, applause, horn, gallop…) triggered from the timelines. It starts only after the first click, is muted with `M`, and the experience works without it.
 - **Accessibility and robustness** — captions on by default, full keyboard control, focus rings, `aria` on the timeline and toggles, `prefers-reduced-motion` (camera shake off, fades instead of page wipe), pauses when the tab is hidden.
 
+## Publishing as a single-file Artifact
+
+```bash
+npm run artifact            # → dist-artifact/ancient-greece.html (≈1 MB: JS, CSS, fonts and posters all inlined)
+```
+
+The artifact host allows no external loads, so the packer bundles everything into one HTML fragment (`<title>`, `<style>`, markup, one `<script>`). Storage access is guarded because the host's frame is sandboxed, and the Full screen button hides itself when fullscreen is unavailable.
+
 ## QA tooling
 
 ```bash
+node tools/qa-artifact.mjs [url] [WxH]   # drives the packed build inside a strictly sandboxed iframe (storage throws, no external loads)
 node tools/qa.mjs [url]     # end-to-end: title → play → pause → scrub → menu → chapters → end card
 node tools/perf.mjs [url]   # scene build time, node counts, per-frame JS cost
 node tools/shot.mjs <url> out.png [w h waitMs]   # one-off screenshot

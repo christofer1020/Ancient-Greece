@@ -110,7 +110,7 @@ export function build(sc) {
   sc.add(ppl, `<g transform="translate(${B0 + 360} ${GY - 150})"><rect x="-80" y="-18" width="160" height="34" rx="3" fill="${C.ivory}" stroke="#9A7862" stroke-width="1.5"/><text y="7" text-anchor="middle" font-family="Cinzel, serif" font-weight="700" font-size="20" letter-spacing="6" fill="${C.blue}">LIBRARY</text></g>`);
   sc.add(ppl, `<g transform="translate(${B0 - 360} ${GY - 150})"><rect x="-80" y="-18" width="160" height="34" rx="3" fill="${C.ivory}" stroke="#9A7862" stroke-width="1.5"/><text y="7" text-anchor="middle" font-family="Cinzel, serif" font-weight="700" font-size="20" letter-spacing="6" fill="${C.blue}">COURT</text></g>`);
   const people = [];
-  [[B0 - 220, 0, 1], [B0 - 120, 1, 1], [B0 + 140, 2, -1], [B0 + 260, 3, -1], [B0 - 20, 4, 1]].forEach(([x, k, f]) => {
+  [[B0 - 220, 0, -1], [B0 - 120, 1, -1], [B0 + 140, 2, 1], [B0 + 260, 3, 1], [B0 - 20, 4, 1]].forEach(([x, k, f]) => {
     const p = sc.fig(ppl, { x, y: GY + 68 + (k % 2) * 14, s: 1.45, outfit: 'chiton', color: ['#3C4A6A', '#8E4A44', '#4E5C48', '#5C4A6A', '#6A5A44'][k], trim: C.sandstone, facing: f, hem: 0.5 });
     people.push(p);
   });
@@ -119,12 +119,29 @@ export function build(sc) {
   // stadium (stop 4)
   const D0 = 4900;
   {
+    // five filled terraces, highest first, so each lower row overlaps the one behind it
+    const TIERS = 5, tier = (i) => ({ rx: 520 - 36 * i, ry: 150 - 6 * i, y: -30 * i });
+    const tone = ['#E8D0B0', '#DDBF9C', '#E4C8A6', '#D6B792', '#DEC09C'];
     let arcs = '';
-    for (let i = 0; i < 5; i++) { const rx = 520 - i * 20, ry = 150 - i * 12, y = -i * 22; arcs += `<path d="M${-rx} ${y} A${rx} ${ry} 0 0 1 ${rx} ${y} L${rx} ${y + 22} A${rx} ${ry} 0 0 0 ${-rx} ${y + 22} Z" fill="${i % 2 ? '#E8D0B0' : '#D9BC98'}" stroke="#8C6C5A" stroke-width="1.2"/>`; }
-    sc.add(ppl, `<g transform="translate(${D0} ${GY - 10})">${arcs}<path d="M-540 6 H540" stroke="#8C6C5A" stroke-width="2"/></g>`);
+    for (let i = TIERS - 1; i >= 0; i--) {
+      const { rx, ry, y } = tier(i);
+      arcs += `<path d="M${-rx} 6 L${-rx} ${y} A${rx} ${ry} 0 0 1 ${rx} ${y} L${rx} 6 Z" fill="${tone[i]}" stroke="#8C6C5A" stroke-width="1.4"/>`;
+    }
+    // a ground-floor arcade gives the lower face some architecture
+    let arches = '';
+    for (let k = -8; k <= 8; k++) { const x = k * 54; arches += `<path d="M${x - 16} 6 V-44 A16 16 0 0 1 ${x + 16} -44 V6 Z" fill="#6B4E57" opacity=".78"/>`; }
+    arches += '<path d="M-505 -66 H505" stroke="#8C6C5A" stroke-width="2.4" opacity=".7"/>';
+    sc.add(ppl, `<g transform="translate(${D0} ${GY - 10})">${arcs}${arches}<path d="M-540 6 H540" stroke="#8C6C5A" stroke-width="2"/></g>`);
     const rs2 = rng(31);
     let sp = '';
-    for (let i = 0; i < 5; i++) for (let k = 0; k < 28; k++) { const a = -1.3 + (2.6 * k) / 28 + rs2.range(-.02, .02); const rx = 505 - i * 20, ry = 138 - i * 12; const x = D0 + Math.sin(a) * rx, y = GY - 10 - i * 22 - Math.cos(a) * ry + 18; sp += `<g transform="translate(${x.toFixed(0)} ${y.toFixed(0)}) scale(.5)"><path d="M-7 0 L7 0 L5 -17 L-5 -17 Z" fill="${['#C96B4C', '#1E3A62', '#F2E9D4', '#5E6A3A', '#CFAF84'][Math.floor(rs2() * 5)]}"/><circle cy="-23" r="6" fill="#2A2623"/></g>`; }
+    for (let i = 0; i < TIERS; i++) {
+      const { rx, ry, y } = tier(i);
+      for (let k = 0; k < 28; k++) {
+        const a = -1.3 + (2.6 * k) / 28 + rs2.range(-.02, .02);
+        const x = D0 + Math.sin(a) * rx, yy = GY - 10 + y - Math.cos(a) * ry + 1;
+        sp += `<g transform="translate(${x.toFixed(0)} ${yy.toFixed(0)}) scale(.5)"><path d="M-7 0 L7 0 L5 -17 L-5 -17 Z" fill="${['#C96B4C', '#1E3A62', '#F2E9D4', '#5E6A3A', '#CFAF84'][Math.floor(rs2() * 5)]}"/><circle cy="-23" r="6" fill="#2A2623"/></g>`;
+      }
+    }
     sc.add(ppl, sp);
     sc.add(ppl, `<g transform="translate(${D0} ${GY + 6})"><rect x="-26" y="-190" width="52" height="190" fill="#D9C39B" stroke="#9C8467" stroke-width="1.5"/><path d="M-60 -190 H60 L44 -214 H-44 Z" fill="${C.bronze}" stroke="${darken(C.bronze, .4)}" stroke-width="1.5"/></g>`);
     sc.add(ppl, `<g transform="translate(${D0} ${GY - 188})"><circle class="pulse" data-lo=".5" data-hi="1" data-sp="6" r="150" fill="url(#cauldronGlow)"/></g>`);
@@ -194,7 +211,7 @@ export function build(sc) {
 
   // the modern world
   showL(lCourt, 19.2, 23.0);
-  people.forEach((p, i) => { p.walk(tl, 18.6 + i * 0.3, p.p.x + (i % 2 ? -140 : 140), 5.2, { ease: 'sine.inOut', face: false }); });
+  people.forEach((p, i) => { p.walk(tl, 18.6 + i * 0.3, p.p.x + p.p.facing * 140, 5.2, { ease: 'sine.inOut', face: false }); });
   showL(lOly, 23.8, 27.6);
   runner.walk(tl, 22.0, D0 - 70, 3.8, { run: 0.5, ease: 'sine.inOut', face: false });
   runner.go(tl, 26.2, 0.5, { armF: 160, elbowF: 10 });

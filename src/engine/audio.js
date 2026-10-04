@@ -127,8 +127,11 @@ class AudioEngine {
     const swell = c.createOscillator(); swell.frequency.value = 0.11;
     const swellG = c.createGain(); swellG.gain.value = 260;
     swell.connect(swellG); swellG.connect(sea.flt.frequency); swell.start();
+    // slow amplitude swell applied BEFORE the mood gain, so a bed set to 0 is really silent
     const swell2 = c.createOscillator(); swell2.frequency.value = 0.07;
-    const sg2 = c.createGain(); sg2.gain.value = 0.06; swell2.connect(sg2); sg2.connect(sea.gain.gain); swell2.start();
+    const seaAm = c.createGain(); seaAm.gain.value = 0.7;
+    const sg2 = c.createGain(); sg2.gain.value = 0.3; swell2.connect(sg2); sg2.connect(seaAm.gain); swell2.start();
+    sea.flt.disconnect(); sea.flt.connect(seaAm); seaAm.connect(sea.gain);
     this.beds.sea = sea;
     // wind
     const wind = mk(this.loopNoise(this.pink), 'bandpass', 520, 0.9);
@@ -136,8 +139,10 @@ class AudioEngine {
     this.beds.wind = wind;
     // crowd murmur: band-passed noise with syllabic modulation
     const crowd = mk(this.loopNoise(this.pink), 'bandpass', 780, 0.6);
-    const cm = c.createOscillator(); cm.frequency.value = 3.3; const cmg = c.createGain(); cmg.gain.value = 0.35; const cmOff = c.createGain(); cmOff.gain.value = 0;
-    cm.connect(cmg); cmg.connect(crowd.gain.gain); cm.start();
+    const cm = c.createOscillator(); cm.frequency.value = 3.3; const cmg = c.createGain(); cmg.gain.value = 0.35;
+    const crowdAm = c.createGain(); crowdAm.gain.value = 0.65;
+    cm.connect(cmg); cmg.connect(crowdAm.gain); cm.start();
+    crowd.flt.disconnect(); crowd.flt.connect(crowdAm); crowdAm.connect(crowd.gain);
     this.beds.crowd = crowd;
     // fire: crackling is scheduled; this is the soft roar
     const fire = mk(this.loopNoise(this.brown), 'bandpass', 380, 0.5);
@@ -198,9 +203,9 @@ class AudioEngine {
     this.mood = m;
     const t = this.ctx.currentTime, k = 1.1;
     const set = (bed, v, scale = 1) => bed && bed.gain.gain.setTargetAtTime(v * scale, t, k);
-    set(this.beds.sea, m.sea, 0.16);
+    set(this.beds.sea, m.sea, 0.23);
     set(this.beds.wind, m.wind, 0.2);
-    set(this.beds.crowd, m.crowd, 0.2);
+    set(this.beds.crowd, m.crowd, 0.77);
     set(this.beds.fire, m.fire, 0.16);
     set(this.beds.rumble, m.storm ? 0.5 : 0, 0.28);
     set(this.beds.night, m.night, 0.02);

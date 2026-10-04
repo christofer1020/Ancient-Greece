@@ -52,7 +52,7 @@ kbd { font: 500 .72em var(--font-ui); border: 1px solid currentColor; border-rad
 .paper { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: multiply; opacity: .38; background-image: var(--grain); background-size: 256px 256px; }
 .vignette { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 85% 80% at 50% 46%, transparent 52%, rgba(46, 28, 18, .34) 100%); }
 .scrim { position: absolute; left: 0; right: 0; pointer-events: none; transition: opacity .6s; }
-.scrim-bottom { bottom: 0; height: 34%; background: linear-gradient(to top, rgba(22, 17, 28, .62), rgba(22, 17, 28, .26) 50%, rgba(22, 17, 28, 0)); }
+.scrim-bottom { bottom: 0; height: 42%; background: linear-gradient(to top, rgba(22, 17, 28, .8), rgba(22, 17, 28, .5) 45%, rgba(22, 17, 28, 0)); }
 .scrim-top { top: 0; height: 18%; background: linear-gradient(to bottom, rgba(22, 17, 28, .42), rgba(22, 17, 28, 0)); }
 #app[data-state="title"] .scrim-bottom { opacity: 0; }
 #app[data-state="title"] .scrim-top { opacity: 0; }
@@ -212,7 +212,7 @@ kbd { font: 500 .72em var(--font-ui); border: 1px solid currentColor; border-rad
 
 /* ---------- chapter page (curtain) ---------- */
 .curtain { position: absolute; inset: 0; z-index: 40; pointer-events: none; overflow: hidden; visibility: hidden; }
-#app[data-curtain="on"] .curtain { visibility: visible; pointer-events: auto; }
+#app[data-curtain="on"] .curtain { visibility: visible; opacity: 1; pointer-events: auto; }
 .curtain-panel { position: absolute; inset: 0; will-change: transform; }
 .cp-paper {
   position: absolute; inset: 0;
@@ -242,6 +242,7 @@ kbd { font: 500 .72em var(--font-ui); border: 1px solid currentColor; border-rad
 /* ---------- end card ---------- */
 .endcard { position: absolute; inset: 0; z-index: 30; display: grid; place-items: center; text-align: center; opacity: 0; visibility: hidden; pointer-events: none; background: radial-gradient(ellipse at 50% 50%, rgba(22, 17, 28, .78), rgba(22, 17, 28, .9)); transition: opacity 1.4s var(--ease), visibility 0s 1.4s; }
 #app[data-end="on"] .endcard { opacity: 1; visibility: visible; pointer-events: auto; transition: opacity 1.4s var(--ease); }
+#app[data-end="on"] .chip, #app[data-end="on"] .captions { opacity: 0; }
 .end-inner { padding: 0 var(--gutter); }
 .end-olive { width: 54px; height: 54px; fill: none; stroke: var(--sandstone); stroke-width: 1.1; stroke-linecap: round; stroke-linejoin: round; }
 .endcard h2 { margin: .2em 0 .5em; font: 600 clamp(26px, 4.4vw, 62px)/1.18 var(--font-display); letter-spacing: .04em; color: var(--ivory); }
@@ -280,7 +281,7 @@ kbd { font: 500 .72em var(--font-ui); border: 1px solid currentColor; border-rad
 .mcard-dur { display: block; margin-top: .7em; font: 500 .62rem/1 var(--font-ui); letter-spacing: .22em; text-transform: uppercase; color: var(--bronze); }
 
 /* ---------- focus ---------- */
-button:focus-visible, .timeline:focus-visible { outline: 2px solid var(--sandstone); outline-offset: 3px; }
+button:focus-visible, .timeline:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; box-shadow: 0 0 0 5px var(--ivory); }
 .menu button:focus-visible { outline-color: var(--blue); }
 
 /* ---------- portrait / small screens ---------- */
@@ -299,9 +300,9 @@ button:focus-visible, .timeline:focus-visible { outline: 2px solid var(--sandsto
 #app[data-layout="portrait"] .chip-text { align-items: center; gap: .6em; }
 #app[data-layout="portrait"] .chip-title { display: block; font-size: 1.15rem; color: var(--blue); }
 #app[data-layout="portrait"] .chip-kicker { color: var(--terracotta); }
-#app[data-layout="portrait"] .captions { bottom: auto; top: calc(var(--frame-top) + var(--frame-h) + 150px); width: 90vw; }
-#app[data-layout="portrait"] .captions p { color: var(--charcoal); text-shadow: none; font-size: clamp(19px, 5vw, 27px); }
-#app[data-layout="portrait"][data-ui="hide"] .captions { top: calc(var(--frame-top) + var(--frame-h) + 150px); bottom: auto; }
+/* captions sit just above the controls so they can never run underneath them */
+#app[data-layout="portrait"] .captions { top: auto; bottom: calc(190px + env(safe-area-inset-bottom)); width: 90vw; }
+#app[data-layout="portrait"] .captions p { color: var(--charcoal); text-shadow: none; font-size: clamp(16px, min(5vw, 2.7vh), 27px); }
 #app[data-layout="portrait"] .player { grid-template-columns: 1fr; gap: 12px; padding-bottom: calc(14px + env(safe-area-inset-bottom)); background: linear-gradient(to top, var(--parchment) 72%, rgba(232, 217, 188, 0)); padding-top: 26px; }
 #app[data-layout="portrait"] .transport { justify-content: center; order: 2; }
 #app[data-layout="portrait"] .utility { justify-content: center; order: 3; }
@@ -311,7 +312,7 @@ button:focus-visible, .timeline:focus-visible { outline: 2px solid var(--sandsto
 #app[data-layout="portrait"] .ctl-play { background: var(--blue); color: var(--ivory); border-color: var(--blue); }
 #app[data-layout="portrait"] .seg-node { background: rgba(30, 58, 98, .1); color: var(--blue); border-color: rgba(30, 58, 98, .4); backdrop-filter: none; }
 #app[data-layout="portrait"] .seg.current .seg-node { background: var(--blue); color: var(--ivory); }
-#app[data-layout="portrait"] .seg.done .seg-node { color: var(--ivory); }
+#app[data-layout="portrait"] .seg.done .seg-node { color: var(--ivory); background: rgba(201, 107, 76, .92); border-color: transparent; }
 #app[data-layout="portrait"] .seg-track { background: rgba(30, 58, 98, .22); }
 #app[data-layout="portrait"] .seg.current .seg-track { background: rgba(30, 58, 98, .4); }
 #app[data-layout="portrait"][data-ui="hide"] .player, #app[data-layout="portrait"][data-ui="hide"] .topbar { opacity: 1; transform: none; pointer-events: auto; }
@@ -329,10 +330,10 @@ button:focus-visible, .timeline:focus-visible { outline: 2px solid var(--sandsto
 #app[data-layout="portrait"] .play-big { width: 76px; height: 76px; }
 #app[data-layout="portrait"] .play-tri { width: 28px; height: 28px; }
 #app[data-layout="portrait"] .intro-hint { display: none; }
-#app[data-layout="portrait"] .endcard { z-index: 60; }
+#app[data-layout="portrait"] .endcard { background: rgba(22, 17, 28, .96); }
 
 @media (max-width: 1000px) {
-  .menu-grid { grid-template-columns: repeat(2, 1fr); }
+  #app[data-layout="portrait"] .menu-grid { grid-template-columns: repeat(2, 1fr); }
   .chip-title { display: none; }
   .time { display: none; }
   .btn-text span { display: none; }
@@ -343,7 +344,7 @@ button:focus-visible, .timeline:focus-visible { outline: 2px solid var(--sandsto
   .seg-node { width: 24px; height: 24px; }
   .seg-node svg { width: 14px; height: 14px; }
   .tl-segments { gap: 5px; }
-  .menu-grid { grid-template-columns: 1fr 1fr; }
+  #app[data-layout="portrait"] .menu-grid { grid-template-columns: 1fr 1fr; }
   .mcard-sub { display: none; }
   .brand span { display: none; }
 }
@@ -362,4 +363,22 @@ button:focus-visible, .timeline:focus-visible { outline: 2px solid var(--sandsto
 @media (prefers-reduced-motion: reduce) {
   .play-ring { animation: none; }
   .captions .w { animation-duration: .01s; animation-delay: 0s; }
+}
+
+/* short or compact landscape windows: keep the whole menu on one screen */
+@media (max-width: 1000px) and (min-aspect-ratio: 19/20) {
+  .menu-grid { grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .mcard-sub { display: none; }
+  .mcard-kicker { margin-bottom: .4em; }
+  .mcard-body { padding-top: 8px; }
+  .mcard-title { font-size: .84rem; }
+  .menu-panel { padding: 16px; }
+  .menu-head { margin-bottom: 10px; padding-bottom: 14px; }
+  .menu-head h2 { font-size: clamp(22px, 3vw, 34px); }
+}
+
+/* very short portrait screens: give the caption the room the chapter letter was using */
+@media (max-height: 820px) {
+  #app[data-layout="portrait"] .chip-letter { display: none; }
+  #app[data-layout="portrait"] .chip { top: calc(var(--frame-top) + var(--frame-h) + 12px); }
 }

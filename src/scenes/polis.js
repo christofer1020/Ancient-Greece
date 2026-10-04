@@ -161,6 +161,7 @@ export function build(sc) {
       <ellipse class="ringline" cx="1005" cy="816" rx="352" ry="62" fill="none" stroke="${C.terracotta}" stroke-width="4" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" stroke-linecap="round"/>
       <ellipse cx="1005" cy="816" rx="338" ry="56" fill="none" stroke="${C.red}" stroke-width="1.4" stroke-dasharray="3 6" opacity=".8"/></g>`;
   })());
+  ppl.g.insertBefore(ring, s1.root); // the glow sits on the ground, under the people
   const ringLine = ring.querySelector('.ringline');
   const shaft = sc.add(ppl, S.lightShaft({ x: 880, y: 40, w: 250, h: 800, tilt: 0, op: 0.2, color: '#FFE9B0' }));
   gsap.set(shaft, { opacity: 0 });
@@ -171,7 +172,7 @@ export function build(sc) {
   const map = aegeanMap({ w: MW, h: MH, sea: '#BFD0D2', land: '#DCC495', line: '#8A5A2B' });
   const dots = [
     ['Athens', 23.73, 37.98, 14, 22, 'start'], ['Sparta', 22.43, 37.07, -6, 34, 'middle'], ['Corinth', 22.88, 37.91, -14, -12, 'end'], ['Thebes', 23.32, 38.32, -14, -12, 'end'],
-    ['Argos', 22.72, 37.63, -14, 4, 'end'], ['Miletus', 27.28, 37.53, 12, 20, 'start'], ['Ephesus', 27.34, 37.94, 12, -4, 'start'], ['Mytilene', 26.56, 39.1, 12, -6, 'start'], ['Rhodes', 28.2, 36.45, -8, 28, 'middle'], ['Knossos', 25.16, 35.3, 0, 26, 'middle'],
+    ['Argos', 22.72, 37.63, -14, 4, 'end'], ['Miletus', 27.28, 37.53, 12, 20, 'start'], ['Ephesus', 27.34, 37.94, 12, -4, 'start'], ['Mytilene', 26.56, 39.1, 12, -6, 'start'], ['Rhodes', 28.2, 36.45, -8, 28, 'middle'], ['Knossos', 25.16, 35.3, 0, -16, 'middle'],
   ];
   let dotsM = '';
   dots.forEach(([n, lo, la, dx, dy, an], i) => {
@@ -181,24 +182,25 @@ export function build(sc) {
   });
   const factY = [250, 330, 410];
   const facts = [['Its own laws', '<path d="M8 8h18v26H8zM12 15h10M12 21h10M12 27h7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>'],
-    ['Its own gods', '<path d="M20 4 10 22h8l-2 14 14-20h-8l4-12z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>'],
+    ['Its own patron god', '<path d="M20 4 10 22h8l-2 14 14-20h-8l4-12z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>'],
     ['Its own army', '<path d="M8 34V20c0-9 5-14 12-14s12 5 12 14v14M14 34v-8h12v8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>']];
   const mapEl = sc.add(ui, `<g class="polismap" opacity="0">
     <rect x="${PX}" y="${PY}" width="${PW}" height="${PH}" rx="4" fill="#F0E4C8" stroke="${C.bronze}" stroke-width="2"/>
     <rect x="${PX + 10}" y="${PY + 10}" width="${PW - 20}" height="${PH - 20}" rx="2" fill="none" stroke="${C.bronze}" stroke-width="1" opacity=".6"/>
     ${S.meander({ x: PX + 24, y: PY + PH - 36, w: PW - 48, h: 16, c: C.bronze, sw: 1.8 })}
     <g transform="translate(${PX + 36} ${PY + 36})"><clipPath id="mclip"><rect width="${MW}" height="${MH - 34}" rx="2"/></clipPath><g clip-path="url(#mclip)">${map.markup}${dotsM}</g><rect width="${MW}" height="${MH - 34}" rx="2" fill="none" stroke="${C.bronze}" stroke-width="1.5"/></g>
-    <text x="${PX + 790}" y="${PY + 84}" font-family="Cinzel, serif" font-weight="700" font-size="40" letter-spacing="5" fill="${C.blue}">POLEIS</text>
-    <text x="${PX + 790}" y="${PY + 118}" font-family="'EB Garamond', serif" font-style="italic" font-size="23" fill="${C.charcoal}">Independent city-states,</text>
-    <text x="${PX + 790}" y="${PY + 146}" font-family="'EB Garamond', serif" font-style="italic" font-size="23" fill="${C.charcoal}">hundreds of them.</text>
-    <path d="M${PX + 790} ${PY + 170} h260" stroke="${C.bronze}" stroke-width="1.4"/>
-    ${facts.map(([t, ic], i) => `<g class="fact" data-i="${i}" transform="translate(${PX + 790} ${PY + 205 + i * 84})"><g color="${C.terracotta}" transform="translate(0 0)">${ic}</g><text x="58" y="26" font-family="Cinzel, serif" font-weight="600" font-size="22" letter-spacing="1.6" fill="${C.blue}">${t}</text></g>`).join('')}
+    <text x="${PX + 776}" y="${PY + 84}" font-family="Cinzel, serif" font-weight="700" font-size="40" letter-spacing="5" fill="${C.blue}">POLEIS</text>
+    <text x="${PX + 776}" y="${PY + 118}" font-family="'EB Garamond', serif" font-style="italic" font-size="23" fill="${C.charcoal}">Independent city-states,</text>
+    <text x="${PX + 776}" y="${PY + 146}" font-family="'EB Garamond', serif" font-style="italic" font-size="23" fill="${C.charcoal}">hundreds of them.</text>
+    <path d="M${PX + 776} ${PY + 170} h260" stroke="${C.bronze}" stroke-width="1.4"/>
+    ${facts.map(([t, ic], i) => `<g class="fact" data-i="${i}" transform="translate(${PX + 776} ${PY + 205 + i * 84})"><g color="${C.terracotta}" transform="translate(0 0)">${ic}</g><text x="54" y="26" font-family="Cinzel, serif" font-weight="600" font-size="20" letter-spacing="1.1" fill="${C.blue}">${t}</text></g>`).join('')}
   </g>`);
 
   // ------------------------------------------------------------------ atmosphere
   sc.add(sky, S.flock({ n: 5, x: 200, y: 240, s: 0.7, vx: 18, spread: 70 }));
   sc.particle('motes', { n: 34, color: ['#FFF0C8', '#FFE2A0'], op: 0.45, size: 2, vx: 0.004, vy: -0.002 });
   const tint = sc.tint('#1c2550');
+  sc.root.insertBefore(tint, ui.svg); // dim the scene, never the map card
 
   // ================================================================== STORY
   cam.x = 700; cam.y = 575; cam.z = 0.86;
@@ -218,8 +220,9 @@ export function build(sc) {
     tl.to(pin, { opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(2.4)' }, 9.2 + i * 0.5);
   });
   mapEl.querySelectorAll('.fact').forEach((f, i) => {
-    gsap.set(f, { opacity: 0, x: 18 });
-    tl.to(f, { opacity: 1, x: 0, duration: 0.7, ease: 'power3.out' }, 11.8 + i * 1.0);
+    // GSAP takes over the translate() attribute, so animate the absolute x (PX+790), not 0
+    gsap.set(f, { opacity: 0, x: PX + 794 });
+    tl.to(f, { opacity: 1, x: PX + 776, duration: 0.7, ease: 'power3.out' }, 11.8 + i * 1.0);
   });
   tl.to(inner, { opacity: 0, y: -26, duration: 0.8, ease: 'power2.in' }, 16.0);
   tl.to(tint, { opacity: 0, duration: 0.9 }, 16.0);

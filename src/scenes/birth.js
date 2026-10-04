@@ -54,7 +54,7 @@ export function build(sc) {
   sc.add(ships, S.drifter(`<g transform="translate(1180 724)">${S.ship({ type: 'boat', s: 0.5, dir: -1, hull: '#33261F' })}</g>`, { vx: -2, bob: 0 }));
 
   // ------------------------------------------------------------------ land: hill with village (parallax 0.8)
-  const hillPts = [[880, 900], [980, 800], [1100, 770], [1240, 735], [1360, 700], [1460, 652], [1560, 592], [1660, 548], [1760, 524], [1860, 528], [1980, 552], [2140, 602], [2400, 652], [2700, 700]];
+  const hillPts = [[880, 900], [980, 800], [1100, 770], [1240, 735], [1360, 700], [1460, 652], [1560, 592], [1640, 548], [1690, 526], [1750, 522], [1870, 524], [1930, 528], [1990, 552], [2140, 602], [2400, 652], [2700, 700]];
   const hillD = smoothPath(hillPts) + ' L2800 1500 L880 1500 Z';
   const hg = S.grad([[0, '#97A06C'], [1, '#6C7B4C']]);
   sc.add(land, `<defs>${hg.def}</defs><path d="${hillD}" fill="${hg.ref}"/>`);
@@ -68,7 +68,7 @@ export function build(sc) {
   for (const [x, y, s] of [[1000, 820, 0.8], [1080, 800, 0.7], [1800, 600, 0.55], [2000, 560, 0.5], [2200, 600, 0.6], [2330, 640, 0.7], [1700, 640, 0.7]]) sc.add(land, S.olive(x, y, s, { leaf: '#7C8A55' }));
   sc.add(land, S.cypress(1450, 700, 90, '#43522F')); sc.add(land, S.cypress(1480, 704, 70, '#43522F'));
   // Mycenae on the summit
-  sc.add(land, `<g transform="translate(1810 522)">${S.mycenae({ s: 0.62 })}</g>`);
+  sc.add(land, `<g transform="translate(1810 524)">${S.mycenae({ s: 0.62 })}</g>`);
   sc.add(land, S.smoke({ x: 1300, y: 720, s: 1, n: 6, c: '#6a6060' }));
   sc.add(land, S.smoke({ x: 1560, y: 650, s: 0.9, n: 6, c: '#6a6060' }));
 
@@ -138,7 +138,7 @@ export function build(sc) {
   tl.fromTo(mistEl, { opacity: 1 }, { opacity: 0.12, duration: 14, ease: 'power1.inOut' }, 1);
 
   // the merchant ship crosses the bay and beaches by the village
-  tl.to(sailer, { x: 610, duration: 16, ease: 'sine.inOut' }, 5.5);
+  tl.to(sailer, { x: 720, duration: 16, ease: 'sine.inOut' }, 5.5);
 
   // watchers breathe, child looks around, elder points out to sea then toward the ship
   elder.go(tl, 3.5, 1.4, { armF: 86, elbowF: 6, lean: 3, head: 3 });
@@ -157,7 +157,7 @@ export function build(sc) {
   carrier.walk(tl, 12.5, 1390, 8.5, { ease: 'sine.inOut' });
   // trader steps off the ship
   tl.set(trader.p, { opacity: 0 }, 0);
-  tl.set(trader.p, { opacity: 1 }, 20.2);
+  tl.to(trader.p, { opacity: 1, duration: 0.45, ease: 'none' }, 20.2);
   trader.walk(tl, 20.3, 1230, 4.2, { ease: 'sine.out' });
   trader.go(tl, 24.6, 1.2, { armF: 120, elbowF: 30, lean: -2 });
   tl.to(trader.p, { armF: 40, elbowF: 40, duration: 1.0, ease: 'sine.inOut' }, 27.5);

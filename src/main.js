@@ -5,6 +5,7 @@ import '@fontsource/eb-garamond/latin-400.css';
 import '@fontsource/eb-garamond/latin-500.css';
 import '@fontsource/eb-garamond/latin-500-italic.css';
 import '@fontsource/eb-garamond/greek-500.css';
+import '@fontsource/eb-garamond/greek-500-italic.css';
 import '@fontsource/gfs-didot/greek-400.css';
 import '@fontsource/gfs-didot/latin-400.css';
 import '@fontsource/jost/latin-400.css';

@@ -100,7 +100,7 @@ export function build(sc) {
   // region names
   const rname = (lo, la, t, size = 20, rot = 0) => { const [x, y] = P(lo, la); return `<text x="${x.toFixed(0)}" y="${y.toFixed(0)}" transform="rotate(${rot} ${x.toFixed(0)} ${y.toFixed(0)})" text-anchor="middle" font-family="Cinzel, serif" font-weight="600" font-size="${size}" letter-spacing="${size * 0.42}" fill="#8A5A2B" opacity=".6">${t}</text>`; };
   const sname = (lo, la, t, size = 18) => { const [x, y] = P(lo, la); return `<text x="${x.toFixed(0)}" y="${y.toFixed(0)}" text-anchor="middle" font-family="'EB Garamond', serif" font-style="italic" font-size="${size}" letter-spacing="3" fill="#4A6B80" opacity=".8">${t}</text>`; };
-  const names = rname(22.5, 44.5, 'MACEDON', 17) + rname(55.5, 34.6, 'PERSIA', 30, -6) + rname(30, 26, 'EGYPT', 24) + rname(67, 36.2, 'BACTRIA', 17, -4) + rname(74, 28.4, 'INDIA', 26, -80) + rname(44, 26, 'ARABIA', 24) + rname(34, 41.8, 'ASIA MINOR', 15)
+  const names = rname(22.4, 42.1, 'MACEDON', 17) + rname(55.5, 34.6, 'PERSIA', 30, -6) + rname(30, 26, 'EGYPT', 24) + rname(66.6, 38.7, 'BACTRIA', 17, -4) + rname(74, 28.4, 'INDIA', 26, -80) + rname(44, 26, 'ARABIA', 24) + rname(34, 41.8, 'ASIA MINOR', 15)
     + sname(18, 34, 'Mediterranean Sea', 21) + sname(34.5, 43.7, 'Black Sea', 17) + sname(50.5, 41.6, 'Caspian', 15) + sname(52, 25, 'Persian Gulf', 15) + sname(66, 21.4, 'Arabian Sea', 18) + sname(35.4, 21.5, 'Red Sea', 14);
   // compass rose
   const [cx0, cy0] = [1500, 170];
@@ -111,7 +111,7 @@ export function build(sc) {
   // route
   const CITY = {
     pella: [22.55, 40.76, 'PELLA'], granicus: [27.3, 40.2, 'GRANICUS'], gordium: [31.95, 39.65, ''], issus: [36.2, 36.85, 'ISSUS'], tyre: [35.2, 33.3, 'TYRE'], alexandria: [29.9, 31.2, 'ALEXANDRIA'], memphis: [31.25, 29.85, ''],
-    gaza: [34.45, 31.45, ''], pelusium: [32.6, 31.0, ''], rt1: [33.6, 31.1, ''], rt2: [36.4, 34.2, ''], thaps: [38.4, 36.0, ''], gaugamela: [43.3, 36.5, 'GAUGAMELA'], babylon: [44.4, 32.5, 'BABYLON'], susa: [48.2, 32.2, ''], persepolis: [52.9, 29.95, 'PERSEPOLIS'], ecbatana: [48.5, 34.8, ''], bactra: [66.9, 36.8, 'BACTRA'], hydaspes: [73.5, 32.6, 'HYDASPES'], alexE: [69.7, 40.3, 'ALEXANDRIA ESCHATE'], pattala: [68, 24.8, ''],
+    gaza: [34.45, 31.45, ''], pelusium: [32.6, 31.0, ''], rt1: [33.6, 31.1, ''], rt2: [36.4, 34.2, ''], thaps: [38.4, 36.0, ''], gaugamela: [43.3, 36.5, 'GAUGAMELA'], babylon: [44.4, 32.5, 'BABYLON'], susa: [48.2, 32.2, ''], persepolis: [52.9, 29.95, 'PERSEPOLIS'], ecbatana: [48.5, 34.8, ''], bactra: [66.9, 36.8, 'BACTRA'], hydaspes: [73.5, 32.6, 'HYDASPES'], alexE: [69.7, 40.3, 'ALEXANDRIA ESCHATE'], pattala: [68, 24.8, 'PATTALA'],
   };
   const routeKeys = ['pella', 'granicus', 'gordium', 'issus', 'tyre', 'memphis', 'alexandria'];
   const mainKeys = ['pella', 'granicus', 'gordium', 'issus', 'tyre', 'gaza', 'pelusium', 'memphis', 'rt1', 'rt2', 'thaps', 'gaugamela', 'babylon', 'susa', 'persepolis', 'ecbatana', 'bactra', 'hydaspes'];
@@ -136,7 +136,7 @@ export function build(sc) {
   const kingdom = (pts, fill, label, lx, ly) => `<g class="kd" opacity="0"><path d="${smoothPath(pts.map(([lo, la]) => P(lo, la)), true)}" fill="${fill}" opacity=".34" stroke="${fill}" stroke-width="3" stroke-opacity=".7" stroke-linejoin="round"/>
     <text x="${P(lx, ly)[0].toFixed(0)}" y="${P(lx, ly)[1].toFixed(0)}" text-anchor="middle" font-family="Cinzel, serif" font-weight="700" font-size="22" letter-spacing="6" fill="${darken(fill, .35)}" stroke="#F3E7C9" stroke-width="5" paint-order="stroke">${label}</text></g>`;
   const empire = `<g class="emp" opacity="0"><path d="${smoothPath([[19.5, 41.5], [27, 41.5], [35, 40], [44, 38.5], [55, 38.5], [66, 40.5], [72, 38], [75, 33], [74, 29], [68, 25.5], [58, 25.5], [49, 28], [41, 30], [37, 29], [34, 25], [27, 28.5], [24, 31.2], [22, 34], [20.5, 38]].map(([lo, la]) => P(lo, la)), true)}" fill="${C.terracotta}" opacity=".24" stroke="${C.terracotta}" stroke-width="3.4" stroke-opacity=".75" stroke-dasharray="10 6" stroke-linejoin="round"/></g>`;
-  const kingdoms = kingdom([[19.8, 41.3], [26, 41.5], [26.5, 38.8], [21, 38.2]], C.blue, 'ANTIGONIDS', 23, 43.2)
+  const kingdoms = kingdom([[19.8, 41.3], [26, 41.5], [26.5, 38.8], [21, 38.2]], C.blue, 'ANTIGONIDS', 23.2, 38.9)
     + kingdom([[24.5, 32.4], [34.4, 32.2], [35, 23.5], [25, 23.5]], C.olive, 'PTOLEMIES', 29.5, 25.2)
     + kingdom([[28, 40.2], [44, 40.8], [60, 40.2], [66, 36], [66, 30.4], [54, 28], [44, 30.6], [36, 33], [35.2, 37], [30, 37.5]], C.red, 'SELEUCIDS', 49, 36.2);
   const routeEl = `<path class="route-back" d="${routeD}" fill="none" stroke="${C.terracotta}" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" opacity=".16"/>
@@ -228,12 +228,13 @@ export function build(sc) {
   const timeFor = (u) => { let lo = 0, hi = 1; for (let i = 0; i < 24; i++) { const m = (lo + hi) / 2; if (easeS(m) < u) lo = m; else hi = m; } return u0 + dur * lo; };
   ['pella', 'granicus', 'issus', 'tyre', 'gaugamela', 'babylon', 'persepolis', 'bactra', 'hydaspes'].forEach((k) => showCity(k, timeFor(frac[k]) - 0.1));
   showCity('alexandria', timeFor(frac.memphis) + 0.5);
+  showCity('alexE', 22.6); showCity('pattala', 23.4);
   // camera on the map
   focus(25, 39, 1.6, 9.0, 0.01);
   focus(30, 37, 1.5, 10.8, 2.8, 'sine.inOut');
   focus(36, 34, 1.45, 13.6, 2.6, 'sine.inOut');
   focus(47, 33.5, 1.45, 16.2, 3.6, 'sine.inOut');
-  focus(60, 34.5, 1.45, 19.2, 3.4, 'sine.inOut');
+  focus(67, 34, 1.45, 19.2, 1.3, 'sine.inOut'); // ends at 20.5 with Hydaspes (73.5, 32.6) still in frame
   tl.to(emp, { opacity: 1, duration: 2.0 }, 20.0);
   // Alexandrias and the spread of Greek
   gls.forEach((g, i) => {
@@ -244,12 +245,13 @@ export function build(sc) {
   rpls.forEach((r) => {
     const key = r.dataset.k;
     const base = key === 'alexandria' ? 21.0 : key === 'alexE' ? 22.6 : key === 'pattala' ? 23.4 : key === 'persepolis' ? 24.0 : 24.6;
-    tl.fromTo(r, { opacity: 0.9, scale: 0.4, transformOrigin: '50% 50%', svgOrigin: `${r.getAttribute('cx')} ${r.getAttribute('cy')}` }, { opacity: 0, scale: 3.2, duration: 2.2, ease: 'power2.out' }, base);
+    gsap.set(r, { opacity: 0 });
+    tl.fromTo(r, { opacity: 0.9, scale: 0.4, transformOrigin: '50% 50%', svgOrigin: `${r.getAttribute('cx')} ${r.getAttribute('cy')}` }, { opacity: 0, scale: 3.2, duration: 2.2, ease: 'power2.out', immediateRender: false }, base);
   });
   tl.to(pharosEl, { opacity: 1, duration: 0.8 }, 21.0);
   // camera tour of the new cities
-  focus(36, 32, 1.9, 19.8, 0.01);
-  focus(30.5, 31.2, 2.4, 20.2, 2.0, 'power2.inOut');
+  { const [cx, cy] = P(36, 32); tl.set(root, { x: 800 - 1.9 * cx, y: 450 - 1.9 * cy, scale: 1.9 }, 20.5); } // a true cut, after the previous move has finished
+  focus(30.5, 31.2, 2.4, 20.55, 1.85, 'power2.inOut');
   focus(56, 34, 1.4, 22.4, 3.2, 'sine.inOut');
   focus(69, 35, 1.6, 25.4, 2.4, 'sine.inOut');
   // Babylon, 323 BCE

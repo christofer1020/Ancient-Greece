@@ -30,7 +30,7 @@ export const CHAPTERS = [
     duration: 34, mood: 'agora',
     captions: [
       { t: 2.0, d: 7.0, text: 'From about the 8th century BCE, Greeks organised life around the polis: a city and its countryside, ruled as one community.' },
-      { t: 9.6, d: 6.6, text: 'Hundreds of poleis arose, each with its own laws, gods and army — and often at odds with its neighbours.' },
+      { t: 9.6, d: 6.6, text: 'Hundreds of poleis arose, each with its own laws, patron god and army — and often at odds with its neighbours.' },
       { t: 16.8, d: 6.4, text: 'At the heart of each stood the agora: market, meeting place and stage for public argument.' },
       { t: 23.8, d: 9.2, text: 'Citizens spoke, traded and voted there. But citizenship was narrow: women, foreigners and enslaved people were shut out.' },
     ],
