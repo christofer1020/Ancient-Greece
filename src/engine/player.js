@@ -189,8 +189,13 @@ export class Player {
 
   // ------------------------------------------------------------------ scenes
   async loadModule(i) {
-    return i < 0 ? import('../scenes/intro.js') : CHAPTERS[i].load();
+    const mod = await (i < 0 ? import('../scenes/intro.js') : CHAPTERS[i].load());
+    if (mod.preload) await mod.preload(); // asset-driven chapters decode their art before mounting
+    return mod;
   }
+
+  /** Fetch a chapter's module and art in the background. */
+  warm(i) { if (CHAPTERS[i]) CHAPTERS[i].load().then((m) => m.preload?.()).catch(() => {}); }
 
   mount(i, mod) {
     this.scene?.destroy();
@@ -211,7 +216,7 @@ export class Player {
     this.capKey = -2;
     this.setCaption(null, true);
     this.setChapterChrome(i);
-    if (i >= 0 && CHAPTERS[i + 1]) CHAPTERS[i + 1].load(); // warm next
+    if (i >= 0) this.warm(i + 1); // warm next
   }
 
   setChapterChrome(i) {
@@ -232,6 +237,7 @@ export class Player {
     this.mount(-1, mod);
     this.master.play();
     this.state = 'title';
+    this.warm(0);
     this.idx = -1;
     document.title = 'Ancient Greece';
     this.syncButtons();

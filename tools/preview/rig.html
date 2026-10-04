@@ -1,0 +1,35 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Rig preview</title>
+<style>html,body{margin:0;background:#cdbb98}svg{display:block;width:100vw;height:100vh}</style></head>
+<body><svg id="s" viewBox="0 0 1600 900"></svg>
+<script type="module">
+import { Cutout, CPOSES } from '/src/art/cutout.js';
+import { sprite } from '/src/art/sprite.js';
+const q = new URLSearchParams(location.search);
+const svg = document.getElementById('s');
+const g = document.createElementNS('http://www.w3.org/2000/svg', 'g'); svg.appendChild(g);
+const sc = { figs: [] };
+const cast = [
+  ['himation_elite', 'beard_long'], ['chiton_youth', 'hair_short'], ['peplos_villager', 'headband'],
+  ['chiton_villager', 'hat_petasos'], ['himation_merchant', 'hair_curls'], ['chiton_sailor', 'head_neutral'],
+];
+const mode = q.get('mode') || 'lineup';
+const S = +(q.get('s') || 2.2);
+if (mode === 'lineup') {
+  cast.forEach(([c, h], i) => { const f = new Cutout(sc, g, { x: 150 + i * 260, y: 420, s: S, costume: c, head: h }); f.set(q.get('pose') || 'stand'); });
+  cast.forEach(([c, h], i) => { const f = new Cutout(sc, g, { x: 150 + i * 260, y: 860, s: S, costume: c, head: h }); f.p.walk = 1; f.p.x += i * 13; });
+} else if (mode === 'walk') {
+  // one walk cycle: 8 key phases side by side (phase is derived from x, so offset x by 1/8 cycle each)
+  const { CYCLE } = await import('/src/art/cutout.js');
+  const sc2 = S * 0.75, step = CYCLE * sc2 * (1 + 1 / 8);
+  for (let i = 0; i < 8; i++) {
+    const f = new Cutout(sc, g, { x: 110 + i * step, y: 760, s: sc2, costume: q.get('c') || 'chiton_villager', head: q.get('h') || 'hat_petasos' });
+    f.p.walk = 1; f.p.x = 110 + i * step;
+  }
+}
+let t0 = performance.now();
+function frame(now) { const t = (now - t0) / 1000; for (const f of sc.figs) f.render(t); requestAnimationFrame(frame); }
+requestAnimationFrame(frame);
+window.__figs = sc.figs;
+document.body.dataset.ready = '1';
+</script></body></html>
