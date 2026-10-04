@@ -772,6 +772,34 @@
     0.4866,
     0.1417
    ],
+   "sail0": [
+    0.2179,
+    0.2272
+   ],
+   "sail1": [
+    0.4866,
+    0.1417
+   ],
+   "sail2": [
+    0.8388,
+    0.0485
+   ],
+   "sail3": [
+    0.8269,
+    0.1417
+   ],
+   "sail4": [
+    0.803,
+    0.7476
+   ],
+   "sail5": [
+    0.5104,
+    0.7786
+   ],
+   "sail6": [
+    0.2358,
+    0.7709
+   ],
    "water": [
     0.4985,
     0.9573
@@ -782,7 +810,7 @@
    670,
    515
   ],
-  "note": "sheet1 merchant ship",
+  "note": "sheet1 merchant ship (sail* = sail outline for the billow clip)",
   "w": 670
  },
  "global/environment/shrub_a": {

@@ -154,7 +154,7 @@ def main():
     # ships (sheet 1, checker background; sails forced in with polygons)
     piece('global/environment/ship_merchant', 1, (1060, 450, 176, 134), thr=9, holes=None, rt=1.0,
           add=[[(1101, 481), (1146, 470), (1205, 458), (1203, 470), (1199, 548), (1150, 552), (1104, 551)]],
-          anchors={'water': (1148, 575), 'mast': (1146, 470)}, note='sheet1 merchant ship')
+          anchors={'water': (1148, 575), 'mast': (1146, 470), 'sail0': (1101, 481), 'sail1': (1146, 470), 'sail2': (1205, 458), 'sail3': (1203, 470), 'sail4': (1199, 548), 'sail5': (1150, 552), 'sail6': (1104, 551)}, note='sheet1 merchant ship (sail* = sail outline for the billow clip)')
     piece('global/environment/ship_boat_small', 1, (1240, 468, 124, 114), thr=9, holes=None, rt=1.0,
           anchors={'water': (1303, 575)}, note='sheet1 fishing boat')
 

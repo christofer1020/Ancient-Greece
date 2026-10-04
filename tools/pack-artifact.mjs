@@ -21,7 +21,7 @@ const result = await build({
   outdir: outDir,
   write: false,
   legalComments: 'none',
-  loader: { '.woff2': 'dataurl', '.woff': 'dataurl', '.jpg': 'dataurl', '.png': 'dataurl' },
+  loader: { '.woff2': 'dataurl', '.woff': 'dataurl', '.jpg': 'dataurl', '.png': 'dataurl', '.webp': 'dataurl' },
   logLevel: 'warning',
 });
 

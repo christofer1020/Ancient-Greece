@@ -165,7 +165,7 @@ export const LIB = {
   sea_band_far: { src: a45, w: 902, h: 144, path: 'global/environment/sea_band_far' },
   sea_tile_base: { src: a46, w: 3072, h: 80, path: 'global/environment/sea_tile_base' },
   ship_boat_small: { src: a47, w: 459, h: 429, path: 'global/environment/ship_boat_small', an: {"water":[0.5098,0.9557]} },
-  ship_merchant: { src: a48, w: 670, h: 515, path: 'global/environment/ship_merchant', an: {"mast":[0.4866,0.1417],"water":[0.4985,0.9573]} },
+  ship_merchant: { src: a48, w: 670, h: 515, path: 'global/environment/ship_merchant', an: {"mast":[0.4866,0.1417],"sail0":[0.2179,0.2272],"sail1":[0.4866,0.1417],"sail2":[0.8388,0.0485],"sail3":[0.8269,0.1417],"sail4":[0.803,0.7476],"sail5":[0.5104,0.7786],"sail6":[0.2358,0.7709],"water":[0.4985,0.9573]} },
   shrub_a: { src: a49, w: 311, h: 173, path: 'global/environment/shrub_a' },
   shrub_b: { src: a50, w: 246, h: 192, path: 'global/environment/shrub_b' },
   shrub_c: { src: a51, w: 177, h: 192, path: 'global/environment/shrub_c' },

@@ -69,7 +69,7 @@ export function build(sc) {
   // ================================================================ 1 sky (code: light only)
   const skyG = S.grad([[0, '#6D9CC6'], [0.5, '#A7C6DA'], [0.86, '#EAD9C0'], [1, '#F4E2C4']]);
   add(skyL, `<defs>${skyG.def}</defs><rect x="-1600" y="-700" width="4800" height="1700" fill="${skyG.ref}"/>`);
-  const dawnG = S.grad([[0, '#28305F'], [0.42, '#6E5A8A'], [0.74, '#D98E7A'], [0.9, '#F2B07E'], [1, '#F7CB8E']]);
+  const dawnG = S.grad([[0, '#343B6E'], [0.4, '#7A6390'], [0.7, '#E0977A'], [0.88, '#F5B97F'], [1, '#FAD498']]);
   const dawn = add(skyL, `<g><defs>${dawnG.def}</defs><rect x="-1600" y="-700" width="4800" height="1700" fill="${dawnG.ref}"/></g>`);
   const sunG = add(skyL, `<g>${S.sun({ x: 780, y: 330, r: 46, glowR: 640, core: '#FFF2D2', glow: '#FFD8A0' })}${S.rays({ x: 780, y: 330, n: 13, spread: 140, dir: -90, len: 1500, op: 0.16 })}</g>`);
 
@@ -156,11 +156,24 @@ export function build(sc) {
 
   // ================================================================ 9 the merchant ship (hull rocks, sail breathes)
   const shipW = 270;
-  const shipEl = add(shipL, `<g><g class="hull">${sprite('ship_merchant', { x: 0, y: 0, w: shipW, an: 'water' })}</g>
+  // the sail breathes: a copy of the ship art clipped to the sail outline, scaled about the mast
+  const sh = asset('ship_merchant');
+  const sailPts = [0, 1, 2, 3, 4, 5, 6].map((i) => sh.an['sail' + i].join(' ')).join(' ');
+  const shipH = (shipW * sh.h) / sh.w;
+  const sx0 = -sh.an.water[0] * shipW, sy0 = -sh.an.water[1] * shipH;
+  const mastX = sx0 + sh.an.mast[0] * shipW, mastY = sy0 + sh.an.mast[1] * shipH;
+  const shipEl = add(shipL, `<g><defs><clipPath id="sailClip" clipPathUnits="objectBoundingBox"><polygon points="${sailPts.split(' ').map(Number).reduce((a, v, i) => a + (i % 2 ? ',' : ' ') + v, '').trim()}"/></clipPath></defs>
+    <g class="hull">${sprite('ship_merchant', { x: 0, y: 0, w: shipW, an: 'water' })}
+      <g class="sail"><image href="${sh.src}" x="${sx0.toFixed(2)}" y="${sy0.toFixed(2)}" width="${shipW}" height="${shipH.toFixed(2)}" preserveAspectRatio="none" clip-path="url(#sailClip)"/></g></g>
     <g opacity=".5">${sprite('wave_overlay', { x: -shipW * 0.62, y: 6, w: 150 })}</g></g>`);
   const hull = shipEl.querySelector('.hull');
+  const sail = shipEl.querySelector('.sail');
   const SHIP_Y = 610;
-  gsap.set(shipEl, { x: -340, y: SHIP_Y });
+  gsap.set(shipEl, { x: -160, y: SHIP_Y });
+  sc.tick((t) => {
+    const k = 1 + 0.018 * (0.5 + 0.5 * Math.sin(t * 1.15)) + 0.006 * Math.sin(t * 2.7);
+    setAttr(sail, 'transform', `translate(${mastX.toFixed(2)} ${mastY.toFixed(2)}) scale(${k.toFixed(4)} ${(1 + (k - 1) * 0.35).toFixed(4)}) translate(${(-mastX).toFixed(2)} ${(-mastY).toFixed(2)})`);
+  });
   sc.tick((t) => setAttr(hull, 'transform', `translate(0 ${(Math.sin(t * 0.95) * 2.4).toFixed(2)}) rotate(${(Math.sin(t * 0.75 + 0.6) * 1.4).toFixed(2)})`));
 
   // ================================================================ 10 Mycenae on the mainland summit
@@ -287,20 +300,20 @@ export function build(sc) {
   cam.x = 720; cam.y = 560; cam.z = 1.3;
   sc.pan(0, 8, { x: 820, y: 520, z: 1.14 }, 'power2.out');
   sc.pan(8, 8, { x: 930, y: 505 }, 'sine.inOut');
-  sc.pan(16, 8.5, { x: 1430, y: 500, z: 1.12 }, 'power2.inOut');
+  sc.pan(15.6, 7.4, { x: 1430, y: 500, z: 1.12 }, 'power2.inOut');
   sc.pan(24.5, 9.5, { x: 1170, y: 430, z: 0.9 }, 'power2.inOut');
 
   // dawn → day: tint lifts, violet sky cross-fades to day, sun climbs, haze burns off
-  gsap.set(tint, { opacity: 0.55 });
-  tl.to(tint, { opacity: 0, duration: 10, ease: 'power1.inOut' }, 0);
+  gsap.set(tint, { opacity: 0.3 });
+  tl.to(tint, { opacity: 0, duration: 8, ease: 'power1.inOut' }, 0);
   tl.fromTo(dawn, { opacity: 1 }, { opacity: 0, duration: 11, ease: 'power1.inOut' }, 0);
   tl.fromTo(sunG, { y: 150 }, { y: 0, duration: 10, ease: 'power2.out' }, 0.2);
-  tl.fromTo(sunPath, { opacity: 0.9 }, { opacity: 0.35, duration: 12, ease: 'sine.inOut' }, 0);
-  tl.fromTo(glit, { opacity: 0.3 }, { opacity: 1, duration: 5, ease: 'power1.in' }, 3);
+  tl.fromTo(sunPath, { opacity: 1 }, { opacity: 0.4, duration: 13, ease: 'sine.inOut' }, 0);
+  tl.fromTo(glit, { opacity: 0.55 }, { opacity: 1, duration: 4, ease: 'power1.in' }, 1.5);
   tl.fromTo(mist, { opacity: 1 }, { opacity: 0.18, duration: 14, ease: 'power1.inOut' }, 1);
 
   // the merchant ship crosses the bay
-  tl.to(shipEl, { x: 830, y: SHIP_Y + 22, duration: 16, ease: 'sine.inOut' }, 5.5);
+  tl.fromTo(shipEl, { x: -160, y: SHIP_Y }, { x: 830, y: SHIP_Y + 22, duration: 17.5, ease: 'sine.inOut' }, 4.0);
 
   // watchers: the elder points out to sea, the child looks up and around
   elder.go(tl, 3.4, 1.3, { armF: 82, elbowF: 6, lean: 3, head: -3 });
@@ -320,21 +333,21 @@ export function build(sc) {
   farmer.go(tl, 21.3, 1.0, { armF: 80, elbowF: 8, head: -3 });
   farmer.go(tl, 25.2, 1.0, { armF: 8, elbowF: 14, head: 0 });
   // the trader comes ashore from the landing and gestures as he talks
-  tl.set(trader.p, { opacity: 0 }, 0);
-  tl.to(trader.p, { opacity: 1, duration: 0.5, ease: 'none' }, 20.2);
+  trader.p.opacity = 0;
+  tl.fromTo(trader.p, { opacity: 0 }, { opacity: 1, duration: 0.5, ease: 'none', immediateRender: false }, 20.2);
   trader.walk(tl, 20.3, 1300, 4.2, { ease: 'sine.out' });
   trader.go(tl, 24.6, 0.9, 'talk');
   tl.to(trader.p, { elbowF: 92, duration: 0.42, yoyo: true, repeat: 5, ease: 'sine.inOut' }, 25.5);
   trader.go(tl, 28.4, 1.0, { armF: 10, elbowF: 18, lean: 1 });
   // the planter kneels to set a sapling, stands, and waves to the ship
   planter.set({ armF: 20, elbowF: 18, armB: 14, elbowB: 18 });
-  planter.go(tl, 15.8, 1.6, 'crouch');
-  tl.to(planter.p, { armF: 70, elbowF: 40, duration: 0.5, yoyo: true, repeat: 3, ease: 'sine.inOut' }, 17.6);
-  planter.go(tl, 21.2, 1.4, { legF: 3, kneeF: 0, footF: 0, legB: -3, kneeB: 0, footB: 0, lean: 0, head: 0, armF: 8, elbowF: 16, armB: -6, elbowB: 12 });
-  planter.go(tl, 22.5, 0.8, 'wave');
-  tl.to(planter.p, { elbowF: 58, duration: 0.42, yoyo: true, repeat: 5, ease: 'sine.inOut' }, 23.3);
-  planter.go(tl, 26.0, 0.9, { armF: 8, elbowF: 16, lean: 0, head: 0 });
-  tl.fromTo(sapling.firstElementChild, { scale: 0.2, opacity: 0, transformOrigin: '18% 92%' }, { scale: 1, opacity: 1, duration: 1.6, ease: 'back.out(1.8)' }, 18.4);
+  planter.go(tl, 18.6, 1.4, 'crouch');
+  tl.to(planter.p, { armF: 70, elbowF: 40, duration: 0.45, yoyo: true, repeat: 3, ease: 'sine.inOut' }, 20.0);
+  planter.go(tl, 22.2, 1.2, { legF: 3, kneeF: 0, footF: 0, legB: -3, kneeB: 0, footB: 0, lean: 0, head: 0, armF: 8, elbowF: 16, armB: -6, elbowB: 12 });
+  planter.go(tl, 23.4, 0.7, 'wave');
+  tl.to(planter.p, { elbowF: 58, duration: 0.4, yoyo: true, repeat: 5, ease: 'sine.inOut' }, 24.1);
+  planter.go(tl, 26.6, 0.9, { armF: 8, elbowF: 16, lean: 0, head: 0 });
+  tl.fromTo(sapling.firstElementChild, { scale: 0.2, opacity: 0, transformOrigin: '18% 92%' }, { scale: 1, opacity: 1, duration: 1.6, ease: 'back.out(1.8)', immediateRender: true }, 20.6);
 
   // closing wide: the first palace worlds
   const lblC = add(crete, S.mapLabel({ x: creteX, y: creteY - 150, dx: 0, dy: -70, title: 'CRETE', note: 'The Minoans', size: 24 }));

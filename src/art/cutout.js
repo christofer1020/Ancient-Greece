@@ -88,7 +88,7 @@ export const CPOSES = {
   wave:    { armF: 150, elbowF: 24, armB: -6, elbowB: 12, lean: -2, head: -6 },
   talk:    { armF: 46, elbowF: 64, armB: 10, elbowB: 34, lean: 2, head: 1 },
   offer:   { armF: 62, elbowF: 58, armB: 52, elbowB: 62, lean: 4, head: 4 },
-  carryHead: { armF: 168, elbowF: 132, armB: -6, elbowB: 14, lean: -1, head: 0 },
+  carryHead: { armF: 158, elbowF: 64, armB: -6, elbowB: 14, lean: -1, head: 0 },
   carryHip:  { armB: 36, elbowB: 62 },
   sit:     { legF: 86, kneeF: 84, footF: 0, legB: 80, kneeB: 88, footB: 0, armF: 34, elbowF: 66, armB: 26, elbowB: 70, lean: 4, head: 2, drop: 31, plant: 0 },
   crouch:  { legF: 62, kneeF: 104, footF: -6, legB: -2, kneeB: 96, footB: 34, lean: 34, head: 16, armF: 48, elbowF: 18, armB: 30, elbowB: 26, drop: 0, plant: 1 },
