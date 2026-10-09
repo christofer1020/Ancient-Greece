@@ -6,7 +6,7 @@
     0.9936
    ]
   },
-  "h": 1256,
+  "h": 600,
   "master": [
    347,
    1256
@@ -18,7 +18,7 @@
    "opaque_frac": 0.5988,
    "specks": 0
   },
-  "w": 347
+  "w": 166
  },
  "global/characters/char_farmer_full": {
   "anchors": {
@@ -27,7 +27,7 @@
     0.9937
    ]
   },
-  "h": 1260,
+  "h": 600,
   "master": [
    354,
    1260
@@ -39,7 +39,7 @@
    "opaque_frac": 0.47,
    "specks": 0
   },
-  "w": 354
+  "w": 169
  },
  "global/characters/char_foot_sandal": {
   "anchors": {
@@ -52,7 +52,7 @@
     0.9766
    ]
   },
-  "h": 428,
+  "h": 96,
   "master": [
    534,
    428
@@ -64,7 +64,7 @@
    "opaque_frac": 0.4442,
    "specks": 0
   },
-  "w": 534
+  "w": 120
  },
  "global/characters/char_hand_grip": {
   "anchors": {
@@ -73,7 +73,7 @@
     0.0175
    ]
   },
-  "h": 401,
+  "h": 64,
   "master": [
    219,
    401
@@ -85,7 +85,7 @@
    "opaque_frac": 0.617,
    "specks": 0
   },
-  "w": 219
+  "w": 35
  },
  "global/characters/char_hand_open": {
   "anchors": {
@@ -94,7 +94,7 @@
     0.0173
    ]
   },
-  "h": 463,
+  "h": 64,
   "master": [
    221,
    463
@@ -106,7 +106,7 @@
    "opaque_frac": 0.5939,
    "specks": 0
   },
-  "w": 221
+  "w": 31
  },
  "global/characters/char_water_carrier_full": {
   "anchors": {
@@ -115,7 +115,7 @@
     0.9935
    ]
   },
-  "h": 1239,
+  "h": 600,
   "master": [
    326,
    1239
@@ -127,7 +127,7 @@
    "opaque_frac": 0.5898,
    "specks": 0
   },
-  "w": 326
+  "w": 158
  },
  "global/costumes/costume_chiton_farmer": {
   "anchors": {
@@ -140,7 +140,7 @@
     0.9912
    ]
   },
-  "h": 905,
+  "h": 460,
   "master": [
    400,
    905
@@ -153,7 +153,7 @@
    "specks": 0
   },
   "upx": 0.0832,
-  "w": 400
+  "w": 203
  },
  "global/costumes/costume_exomis_worker": {
   "anchors": {
@@ -166,7 +166,7 @@
     0.9914
    ]
   },
-  "h": 932,
+  "h": 460,
   "master": [
    455,
    932
@@ -179,7 +179,7 @@
    "specks": 0
   },
   "upx": 0.0786,
-  "w": 455
+  "w": 225
  },
  "global/costumes/costume_himation_elder": {
   "anchors": {
@@ -192,7 +192,7 @@
     0.9934
    ]
   },
-  "h": 1211,
+  "h": 460,
   "master": [
    405,
    1211
@@ -205,7 +205,7 @@
    "specks": 0
   },
   "upx": 0.0832,
-  "w": 405
+  "w": 154
  },
  "global/costumes/costume_himation_trader": {
   "anchors": {
@@ -218,7 +218,7 @@
     0.9919
    ]
   },
-  "h": 984,
+  "h": 460,
   "master": [
    450,
    984
@@ -231,7 +231,7 @@
    "specks": 0
   },
   "upx": 0.0786,
-  "w": 450
+  "w": 210
  },
  "global/costumes/costume_peplos": {
   "anchors": {
@@ -244,7 +244,7 @@
     0.9934
    ]
   },
-  "h": 1217,
+  "h": 460,
   "master": [
    406,
    1217
@@ -257,7 +257,7 @@
    "specks": 0
   },
   "upx": 0.0832,
-  "w": 406
+  "w": 153
  },
  "global/costumes/costume_tunic_child": {
   "anchors": {
@@ -270,7 +270,7 @@
     0.9897
    ]
   },
-  "h": 779,
+  "h": 460,
   "master": [
    392,
    779
@@ -283,7 +283,7 @@
    "specks": 0
   },
   "upx": 0.0786,
-  "w": 392
+  "w": 231
  },
  "global/environment/env_agave_a": {
   "anchors": {
@@ -292,7 +292,7 @@
     0.9881
    ]
   },
-  "h": 588,
+  "h": 513,
   "master": [
    642,
    588
@@ -304,7 +304,7 @@
    "opaque_frac": 0.4475,
    "specks": 0
   },
-  "w": 642
+  "w": 560
  },
  "global/environment/env_cloud_a": {
   "anchors": {
@@ -313,7 +313,7 @@
     0.9815
    ]
   },
-  "h": 433,
+  "h": 328,
   "master": [
    1322,
    433
@@ -325,7 +325,7 @@
    "opaque_frac": 0.4308,
    "specks": 0
   },
-  "w": 1322
+  "w": 1000
  },
  "global/environment/env_cloud_b": {
   "anchors": {
@@ -355,7 +355,7 @@
     0.9752
    ]
   },
-  "h": 282,
+  "h": 221,
   "master": [
    1275,
    282
@@ -367,7 +367,7 @@
    "opaque_frac": 0.3492,
    "specks": 0
   },
-  "w": 1275
+  "w": 1000
  },
  "global/environment/env_cypress_a": {
   "anchors": {
@@ -376,7 +376,7 @@
     0.9938
    ]
   },
-  "h": 1294,
+  "h": 560,
   "master": [
    322,
    1294
@@ -388,7 +388,7 @@
    "opaque_frac": 0.5849,
    "specks": 0
   },
-  "w": 322
+  "w": 139
  },
  "global/environment/env_fg_grass_clump": {
   "anchors": {
@@ -397,7 +397,7 @@
     0.9992
    ]
   },
-  "h": 1323,
+  "h": 900,
   "master": [
    653,
    1323
@@ -409,7 +409,7 @@
    "opaque_frac": 0.4256,
    "specks": 0
   },
-  "w": 653
+  "w": 444
  },
  "global/environment/env_fg_olive_branch": {
   "anchors": {
@@ -418,7 +418,7 @@
     0.0
    ]
   },
-  "h": 1305,
+  "h": 900,
   "master": [
    744,
    1305
@@ -430,7 +430,7 @@
    "opaque_frac": 0.4523,
    "specks": 0
   },
-  "w": 744
+  "w": 513
  },
  "global/environment/env_olive_sapling_1": {
   "anchors": {
@@ -439,7 +439,7 @@
     0.9778
    ]
   },
-  "h": 406,
+  "h": 160,
   "master": [
    378,
    406
@@ -451,7 +451,7 @@
    "opaque_frac": 0.3032,
    "specks": 0
   },
-  "w": 378
+  "w": 149
  },
  "global/environment/env_olive_sapling_2": {
   "anchors": {
@@ -460,7 +460,7 @@
     0.9901
    ]
   },
-  "h": 810,
+  "h": 160,
   "master": [
    395,
    810
@@ -472,7 +472,7 @@
    "opaque_frac": 0.2911,
    "specks": 0
   },
-  "w": 395
+  "w": 78
  },
  "global/environment/env_olive_sapling_3": {
   "anchors": {
@@ -481,7 +481,7 @@
     0.9931
    ]
   },
-  "h": 1161,
+  "h": 160,
   "master": [
    584,
    1161
@@ -493,7 +493,7 @@
    "opaque_frac": 0.3201,
    "specks": 0
   },
-  "w": 584
+  "w": 80
  },
  "global/environment/env_olive_tree_a": {
   "anchors": {
@@ -502,7 +502,7 @@
     0.993
    ]
   },
-  "h": 1140,
+  "h": 501,
   "master": [
    1273,
    1140
@@ -514,7 +514,7 @@
    "opaque_frac": 0.4954,
    "specks": 0
   },
-  "w": 1273
+  "w": 560
  },
  "global/environment/env_rock_a": {
   "anchors": {
@@ -523,7 +523,7 @@
     0.9798
    ]
   },
-  "h": 396,
+  "h": 368,
   "master": [
    602,
    396
@@ -535,7 +535,7 @@
    "opaque_frac": 0.7008,
    "specks": 0
   },
-  "w": 602
+  "w": 560
  },
  "global/environment/env_shrub_a": {
   "anchors": {
@@ -544,7 +544,7 @@
     0.9861
    ]
   },
-  "h": 649,
+  "h": 481,
   "master": [
    755,
    649
@@ -556,7 +556,7 @@
    "opaque_frac": 0.6147,
    "specks": 0
   },
-  "w": 755
+  "w": 560
  },
  "global/fx/fx_gull_down": {
   "anchors": {
@@ -565,7 +565,7 @@
     0.9663
    ]
   },
-  "h": 267,
+  "h": 89,
   "master": [
    360,
    267
@@ -577,7 +577,7 @@
    "opaque_frac": 0.2919,
    "specks": 0
   },
-  "w": 360
+  "w": 120
  },
  "global/fx/fx_gull_up": {
   "anchors": {
@@ -586,7 +586,7 @@
     0.9787
    ]
   },
-  "h": 422,
+  "h": 120,
   "master": [
    314,
    422
@@ -598,7 +598,7 @@
    "opaque_frac": 0.3596,
    "specks": 0
   },
-  "w": 314
+  "w": 89
  },
  "global/fx/fx_smoke_a": {
   "anchors": {
@@ -607,7 +607,7 @@
     0.9716
    ]
   },
-  "h": 1232,
+  "h": 260,
   "master": [
    264,
    1232
@@ -619,7 +619,7 @@
    "opaque_frac": 0.2621,
    "specks": 0
   },
-  "w": 264
+  "w": 56
  },
  "global/fx/fx_smoke_b": {
   "anchors": {
@@ -628,7 +628,7 @@
     0.97
    ]
   },
-  "h": 1034,
+  "h": 260,
   "master": [
    372,
    1034
@@ -640,7 +640,7 @@
    "opaque_frac": 0.3485,
    "specks": 0
   },
-  "w": 372
+  "w": 94
  },
  "global/heads/head_bun_headband": {
   "anchors": {
@@ -649,7 +649,7 @@
     0.9719
    ]
   },
-  "h": 249,
+  "h": 215,
   "master": [
    255,
    249
@@ -662,7 +662,7 @@
    "specks": 0
   },
   "upx": 0.1322,
-  "w": 255
+  "w": 220
  },
  "global/heads/head_child_curls": {
   "anchors": {
@@ -671,7 +671,7 @@
     0.9857
    ]
   },
-  "h": 558,
+  "h": 220,
   "master": [
    425,
    558
@@ -684,7 +684,7 @@
    "specks": 0
   },
   "upx": 0.04643,
-  "w": 425
+  "w": 168
  },
  "global/heads/head_elder_beard": {
   "anchors": {
@@ -693,7 +693,7 @@
     0.9705
    ]
   },
-  "h": 237,
+  "h": 220,
   "master": [
    197,
    237
@@ -706,7 +706,7 @@
    "specks": 0
   },
   "upx": 0.1322,
-  "w": 197
+  "w": 183
  },
  "global/heads/head_petasos": {
   "anchors": {
@@ -715,7 +715,7 @@
     0.9745
    ]
   },
-  "h": 274,
+  "h": 170,
   "master": [
    354,
    274
@@ -728,7 +728,7 @@
    "specks": 0
   },
   "upx": 0.1322,
-  "w": 354
+  "w": 220
  },
  "global/heads/head_trader_curls_beard": {
   "anchors": {
@@ -737,7 +737,7 @@
     0.9869
    ]
   },
-  "h": 612,
+  "h": 220,
   "master": [
    488,
    612
@@ -750,7 +750,7 @@
    "specks": 0
   },
   "upx": 0.04643,
-  "w": 488
+  "w": 175
  },
  "global/heads/head_worker_headband": {
   "anchors": {
@@ -759,7 +759,7 @@
     0.9864
    ]
   },
-  "h": 587,
+  "h": 220,
   "master": [
    445,
    587
@@ -772,7 +772,7 @@
    "specks": 0
   },
   "upx": 0.04643,
-  "w": 445
+  "w": 167
  },
  "global/props/prop_amphora_a": {
   "anchors": {
@@ -781,7 +781,7 @@
     0.9901
    ]
   },
-  "h": 906,
+  "h": 300,
   "master": [
    407,
    906
@@ -793,7 +793,7 @@
    "opaque_frac": 0.6535,
    "specks": 0
   },
-  "w": 407
+  "w": 135
  },
  "global/props/prop_basket_produce": {
   "anchors": {
@@ -806,7 +806,7 @@
     0.0092
    ]
   },
-  "h": 761,
+  "h": 300,
   "master": [
    701,
    761
@@ -818,7 +818,7 @@
    "opaque_frac": 0.5559,
    "specks": 0
   },
-  "w": 701
+  "w": 276
  },
  "global/props/prop_crate": {
   "anchors": {
@@ -827,7 +827,7 @@
     0.987
    ]
   },
-  "h": 614,
+  "h": 300,
   "master": [
    596,
    614
@@ -839,7 +839,7 @@
    "opaque_frac": 0.7809,
    "specks": 0
   },
-  "w": 596
+  "w": 291
  },
  "global/props/prop_fishing_net": {
   "anchors": {
@@ -848,7 +848,7 @@
     0.9863
    ]
   },
-  "h": 584,
+  "h": 213,
   "master": [
    823,
    584
@@ -860,7 +860,7 @@
    "opaque_frac": 0.6181,
    "specks": 0
   },
-  "w": 823
+  "w": 300
  },
  "global/props/prop_pithos": {
   "anchors": {
@@ -869,7 +869,7 @@
     0.9906
    ]
   },
-  "h": 849,
+  "h": 300,
   "master": [
    689,
    849
@@ -881,7 +881,7 @@
    "opaque_frac": 0.7565,
    "specks": 0
   },
-  "w": 689
+  "w": 243
  },
  "global/props/prop_staff": {
   "anchors": {
@@ -894,7 +894,7 @@
     0.0055
    ]
   },
-  "h": 1283,
+  "h": 360,
   "master": [
    110,
    1283
@@ -906,7 +906,7 @@
    "opaque_frac": 0.5217,
    "specks": 0
   },
-  "w": 110
+  "w": 31
  },
  "global/ships/ship_fishing_boat": {
   "anchors": {
@@ -915,7 +915,7 @@
     0.9807
    ]
   },
-  "h": 466,
+  "h": 181,
   "master": [
    925,
    466
@@ -927,7 +927,7 @@
    "opaque_frac": 0.4057,
    "specks": 0
   },
-  "w": 925
+  "w": 360
  },
  "global/ships/ship_merchant": {
   "anchors": {
@@ -940,7 +940,7 @@
     0.1366
    ]
   },
-  "h": 1310,
+  "h": 602,
   "master": [
    1959,
    1310
@@ -952,7 +952,7 @@
    "opaque_frac": 0.4239,
    "specks": 0
   },
-  "w": 1959
+  "w": 900
  },
  "global/ships/ship_merchant_sail": {
   "anchors": {
@@ -965,7 +965,7 @@
     0.1366
    ]
   },
-  "h": 1310,
+  "h": 602,
   "master": [
    1959,
    1310
@@ -977,7 +977,7 @@
    "opaque_frac": 0.4239,
    "specks": 0
   },
-  "w": 1959
+  "w": 900
  },
  "global/ships/ship_small_sail": {
   "anchors": {
@@ -986,7 +986,7 @@
     0.9905
    ]
   },
-  "h": 952,
+  "h": 360,
   "master": [
    908,
    952
@@ -998,6 +998,6 @@
    "opaque_frac": 0.4477,
    "specks": 0
   },
-  "w": 908
+  "w": 343
  }
 }

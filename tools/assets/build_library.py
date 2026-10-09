@@ -54,12 +54,31 @@ def items(rgba, n_expect, group=40, min_area=1500, order='x'):
     return out
 
 
-def save(rel, rgba, rt=1.0, q=88):
+# Runtime size: the largest on-screen size (scene units x max camera zoom 1.3 x devicePixelRatio 2), so the
+# WebP stays crisp on retina screens without shipping the multi-megapixel masters. Masters keep full size.
+RUNTIME_MAX = {
+    'global/heads/': 220, 'global/costumes/': 460, 'global/characters/char_hand': 64, 'global/characters/char_foot': 120,
+    'global/characters/char_': 600, 'global/ships/ship_merchant': 900, 'global/ships/': 360, 'global/props/prop_staff': 360,
+    'global/props/': 300, 'global/environment/env_cloud': 1000, 'global/environment/env_fg_': 900,
+    'global/environment/env_olive_sapling': 160, 'global/environment/': 560, 'global/fx/fx_gull': 120, 'global/fx/': 260,
+}
+
+
+def runtime_scale(rel, w, h):
+    for prefix, mx in RUNTIME_MAX.items():
+        if rel.startswith(prefix):
+            return min(1.0, mx / max(w, h))
+    return 1.0
+
+
+def save(rel, rgba, rt=None, q=88):
     path = os.path.join(LIB, rel)
     os.makedirs(os.path.dirname(path), exist_ok=True)
     im = Image.fromarray(rgba, 'RGBA')
     im.save(path + '.png', optimize=True)
-    rtim = im if rt == 1 else im.resize((round(im.width * rt), round(im.height * rt)), Image.LANCZOS)
+    if rt is None:
+        rt = runtime_scale(rel, im.width, im.height)
+    rtim = im if rt == 1 else im.resize((max(1, round(im.width * rt)), max(1, round(im.height * rt))), Image.LANCZOS)
     rtim.save(path + '.webp', quality=q, method=6, alpha_quality=95)
     return rtim.size
 
@@ -67,7 +86,7 @@ def save(rel, rgba, rt=1.0, q=88):
 manifest = {}
 
 
-def emit(rel, rgba, anchors=None, extra=None, rt=1.0, do_clean=True):
+def emit(rel, rgba, anchors=None, extra=None, rt=None, do_clean=True):
     if do_clean:
         rgba, off = clean(rgba)
     else:
@@ -211,7 +230,7 @@ def build_rig_parts():
     emit('global/characters/char_hand_grip', hgrip, anchors={'wrist': top_center})
 
 
-def build_family(src_name, rels, group=30, order='x', anchors=None, rt=1.0, n=None):
+def build_family(src_name, rels, group=30, order='x', anchors=None, rt=None, n=None):
     src = load(src_name)
     parts = items(src, n or len(rels), group=group, order=order)
     for p, rel in zip(parts, rels):
@@ -242,13 +261,14 @@ def build_ship():
     hull_rows = np.where(a.sum(1) > 0)[0]
     bottom = float(hull_rows.max())
     H, W = rgba.shape[:2]
-    save('global/ships/ship_merchant', rgba)
+    rt = runtime_scale('global/ships/ship_merchant', W, H)
+    rw, rh = save('global/ships/ship_merchant', rgba, rt=rt)
     sail_rgba = rgba.copy()
     sail_rgba[..., 3] = np.where(sail, rgba[..., 3], 0)
-    save('global/ships/ship_merchant_sail', sail_rgba)  # same canvas as the ship: registers exactly
+    save('global/ships/ship_merchant_sail', sail_rgba, rt=rt)  # same canvas and scale as the ship: registers exactly
     m = metrics(rgba)
     for rel in ('global/ships/ship_merchant', 'global/ships/ship_merchant_sail'):
-        manifest[rel] = dict(w=W, h=H, master=[W, H], qa=m, anchors={'yard': [round(yard[0] / W, 4), round(yard[1] / H, 4)],
+        manifest[rel] = dict(w=rw, h=rh, master=[W, H], qa=m, anchors={'yard': [round(yard[0] / W, 4), round(yard[1] / H, 4)],
                                                                          'keel': [0.5, round(bottom / H, 4)]})
     print('ship', W, H, 'yard', yard, 'keel', bottom, m)
 
