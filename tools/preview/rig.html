@@ -10,20 +10,20 @@ const svg = document.getElementById('s');
 const g = document.createElementNS('http://www.w3.org/2000/svg', 'g'); svg.appendChild(g);
 const sc = { figs: [] };
 const cast = [
-  ['himation_elite', 'beard_long'], ['chiton_youth', 'hair_short'], ['peplos_villager', 'headband'],
-  ['chiton_villager', 'hat_petasos'], ['himation_merchant', 'hair_curls'], ['chiton_sailor', 'head_neutral'],
+  ['costume_himation_elder', 'head_elder_beard'], ['costume_tunic_child', 'head_child_curls'], ['costume_peplos', 'head_bun_headband'],
+  ['costume_chiton_farmer', 'head_petasos'], ['costume_himation_trader', 'head_trader_curls_beard'], ['costume_exomis_worker', 'head_worker_headband'],
 ];
 const mode = q.get('mode') || 'lineup';
-const S = +(q.get('s') || 2.2);
+const S = +(q.get('s') || 2.0);
 if (mode === 'lineup') {
-  cast.forEach(([c, h], i) => { const f = new Cutout(sc, g, { x: 150 + i * 260, y: 420, s: S, costume: c, head: h }); f.set(q.get('pose') || 'stand'); });
-  cast.forEach(([c, h], i) => { const f = new Cutout(sc, g, { x: 150 + i * 260, y: 860, s: S, costume: c, head: h }); f.p.walk = 1; f.p.x += i * 13; });
+  cast.forEach(([c, h], i) => { const f = new Cutout(sc, g, { x: 150 + i * 260, y: 400, s: i === 1 ? S * 0.78 : S, costume: c, head: h }); f.set(q.get('pose') || 'stand'); });
+  cast.forEach(([c, h], i) => { const f = new Cutout(sc, g, { x: 150 + i * 260, y: 870, s: i === 1 ? S * 0.78 : S, costume: c, head: h }); f.p.walk = 1; f.p.x += i * 13; });
 } else if (mode === 'walk') {
   // one walk cycle: 8 key phases side by side (phase is derived from x, so offset x by 1/8 cycle each)
   const { CYCLE } = await import('/src/art/cutout.js');
   const sc2 = S * 0.75, step = CYCLE * sc2 * (1 + 1 / 8);
   for (let i = 0; i < 8; i++) {
-    const f = new Cutout(sc, g, { x: 110 + i * step, y: 760, s: sc2, costume: q.get('c') || 'chiton_villager', head: q.get('h') || 'hat_petasos' });
+    const f = new Cutout(sc, g, { x: 110 + i * step, y: 760, s: sc2, costume: q.get('c') || 'costume_chiton_farmer', head: q.get('h') || 'head_petasos' });
     f.p.walk = 1; f.p.x = 110 + i * step;
   }
 }

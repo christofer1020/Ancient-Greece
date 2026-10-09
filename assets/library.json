@@ -1,0 +1,1003 @@
+{
+ "global/characters/char_elder_full": {
+  "anchors": {
+   "base": [
+    0.4035,
+    0.9936
+   ]
+  },
+  "h": 1256,
+  "master": [
+   347,
+   1256
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 9403,
+   "light_halo": 0.0,
+   "opaque_frac": 0.5988,
+   "specks": 0
+  },
+  "w": 347
+ },
+ "global/characters/char_farmer_full": {
+  "anchors": {
+   "base": [
+    0.3785,
+    0.9937
+   ]
+  },
+  "h": 1260,
+  "master": [
+   354,
+   1260
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 10778,
+   "light_halo": 0.0,
+   "opaque_frac": 0.47,
+   "specks": 0
+  },
+  "w": 354
+ },
+ "global/characters/char_foot_sandal": {
+  "anchors": {
+   "ankle": [
+    0.2172,
+    0.0164
+   ],
+   "sole": [
+    0.618,
+    0.9766
+   ]
+  },
+  "h": 428,
+  "master": [
+   534,
+   428
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 3935,
+   "light_halo": 0.0,
+   "opaque_frac": 0.4442,
+   "specks": 0
+  },
+  "w": 534
+ },
+ "global/characters/char_hand_grip": {
+  "anchors": {
+   "wrist": [
+    0.3927,
+    0.0175
+   ]
+  },
+  "h": 401,
+  "master": [
+   219,
+   401
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 2175,
+   "light_halo": 0.0,
+   "opaque_frac": 0.617,
+   "specks": 0
+  },
+  "w": 219
+ },
+ "global/characters/char_hand_open": {
+  "anchors": {
+   "wrist": [
+    0.371,
+    0.0173
+   ]
+  },
+  "h": 463,
+  "master": [
+   221,
+   463
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 2831,
+   "light_halo": 0.0,
+   "opaque_frac": 0.5939,
+   "specks": 0
+  },
+  "w": 221
+ },
+ "global/characters/char_water_carrier_full": {
+  "anchors": {
+   "base": [
+    0.411,
+    0.9935
+   ]
+  },
+  "h": 1239,
+  "master": [
+   326,
+   1239
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 9180,
+   "light_halo": 0.0,
+   "opaque_frac": 0.5898,
+   "specks": 0
+  },
+  "w": 326
+ },
+ "global/costumes/costume_chiton_farmer": {
+  "anchors": {
+   "collar": [
+    0.4763,
+    0.0077
+   ],
+   "hem": [
+    0.5175,
+    0.9912
+   ]
+  },
+  "h": 905,
+  "master": [
+   400,
+   905
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 5907,
+   "light_halo": 0.0,
+   "opaque_frac": 0.7135,
+   "specks": 0
+  },
+  "upx": 0.0832,
+  "w": 400
+ },
+ "global/costumes/costume_exomis_worker": {
+  "anchors": {
+   "collar": [
+    0.4835,
+    0.0075
+   ],
+   "hem": [
+    0.5077,
+    0.9914
+   ]
+  },
+  "h": 932,
+  "master": [
+   455,
+   932
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 4671,
+   "light_halo": 0.0,
+   "opaque_frac": 0.6898,
+   "specks": 0
+  },
+  "upx": 0.0786,
+  "w": 455
+ },
+ "global/costumes/costume_himation_elder": {
+  "anchors": {
+   "collar": [
+    0.4247,
+    0.0066
+   ],
+   "hem": [
+    0.4506,
+    0.9934
+   ]
+  },
+  "h": 1211,
+  "master": [
+   405,
+   1211
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 7331,
+   "light_halo": 0.0,
+   "opaque_frac": 0.7466,
+   "specks": 0
+  },
+  "upx": 0.0832,
+  "w": 405
+ },
+ "global/costumes/costume_himation_trader": {
+  "anchors": {
+   "collar": [
+    0.3922,
+    0.0071
+   ],
+   "hem": [
+    0.4578,
+    0.9919
+   ]
+  },
+  "h": 984,
+  "master": [
+   450,
+   984
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 5184,
+   "light_halo": 0.0,
+   "opaque_frac": 0.7359,
+   "specks": 0
+  },
+  "upx": 0.0786,
+  "w": 450
+ },
+ "global/costumes/costume_peplos": {
+  "anchors": {
+   "collar": [
+    0.4618,
+    0.0066
+   ],
+   "hem": [
+    0.4828,
+    0.9934
+   ]
+  },
+  "h": 1217,
+  "master": [
+   406,
+   1217
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 6955,
+   "light_halo": 0.0,
+   "opaque_frac": 0.6881,
+   "specks": 0
+  },
+  "upx": 0.0832,
+  "w": 406
+ },
+ "global/costumes/costume_tunic_child": {
+  "anchors": {
+   "collar": [
+    0.4885,
+    0.009
+   ],
+   "hem": [
+    0.4949,
+    0.9897
+   ]
+  },
+  "h": 779,
+  "master": [
+   392,
+   779
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 3921,
+   "light_halo": 0.0,
+   "opaque_frac": 0.7062,
+   "specks": 0
+  },
+  "upx": 0.0786,
+  "w": 392
+ },
+ "global/environment/env_agave_a": {
+  "anchors": {
+   "base": [
+    0.4735,
+    0.9881
+   ]
+  },
+  "h": 588,
+  "master": [
+   642,
+   588
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 15390,
+   "light_halo": 0.0,
+   "opaque_frac": 0.4475,
+   "specks": 0
+  },
+  "w": 642
+ },
+ "global/environment/env_cloud_a": {
+  "anchors": {
+   "base": [
+    0.3741,
+    0.9815
+   ]
+  },
+  "h": 433,
+  "master": [
+   1322,
+   433
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 19907,
+   "light_halo": 0.0,
+   "opaque_frac": 0.4308,
+   "specks": 0
+  },
+  "w": 1322
+ },
+ "global/environment/env_cloud_b": {
+  "anchors": {
+   "base": [
+    0.5185,
+    0.9725
+   ]
+  },
+  "h": 291,
+  "master": [
+   947,
+   291
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 13969,
+   "light_halo": 0.0,
+   "opaque_frac": 0.4257,
+   "specks": 0
+  },
+  "w": 947
+ },
+ "global/environment/env_cloud_c": {
+  "anchors": {
+   "base": [
+    0.32,
+    0.9752
+   ]
+  },
+  "h": 282,
+  "master": [
+   1275,
+   282
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 16440,
+   "light_halo": 0.0,
+   "opaque_frac": 0.3492,
+   "specks": 0
+  },
+  "w": 1275
+ },
+ "global/environment/env_cypress_a": {
+  "anchors": {
+   "base": [
+    0.4845,
+    0.9938
+   ]
+  },
+  "h": 1294,
+  "master": [
+   322,
+   1294
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 27640,
+   "light_halo": 0.0,
+   "opaque_frac": 0.5849,
+   "specks": 0
+  },
+  "w": 322
+ },
+ "global/environment/env_fg_grass_clump": {
+  "anchors": {
+   "base": [
+    0.657,
+    0.9992
+   ]
+  },
+  "h": 1323,
+  "master": [
+   653,
+   1323
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 235226,
+   "light_halo": 0.0,
+   "opaque_frac": 0.4256,
+   "specks": 0
+  },
+  "w": 653
+ },
+ "global/environment/env_fg_olive_branch": {
+  "anchors": {
+   "top": [
+    0.3844,
+    0.0
+   ]
+  },
+  "h": 1305,
+  "master": [
+   744,
+   1305
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 138351,
+   "light_halo": 0.0,
+   "opaque_frac": 0.4523,
+   "specks": 0
+  },
+  "w": 744
+ },
+ "global/environment/env_olive_sapling_1": {
+  "anchors": {
+   "base": [
+    0.4656,
+    0.9778
+   ]
+  },
+  "h": 406,
+  "master": [
+   378,
+   406
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 13029,
+   "light_halo": 0.0,
+   "opaque_frac": 0.3032,
+   "specks": 0
+  },
+  "w": 378
+ },
+ "global/environment/env_olive_sapling_2": {
+  "anchors": {
+   "base": [
+    0.4937,
+    0.9901
+   ]
+  },
+  "h": 810,
+  "master": [
+   395,
+   810
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 36915,
+   "light_halo": 0.0,
+   "opaque_frac": 0.2911,
+   "specks": 0
+  },
+  "w": 395
+ },
+ "global/environment/env_olive_sapling_3": {
+  "anchors": {
+   "base": [
+    0.4589,
+    0.9931
+   ]
+  },
+  "h": 1161,
+  "master": [
+   584,
+   1161
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 97598,
+   "light_halo": 0.0,
+   "opaque_frac": 0.3201,
+   "specks": 0
+  },
+  "w": 584
+ },
+ "global/environment/env_olive_tree_a": {
+  "anchors": {
+   "base": [
+    0.5185,
+    0.993
+   ]
+  },
+  "h": 1140,
+  "master": [
+   1273,
+   1140
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 166481,
+   "light_halo": 0.0,
+   "opaque_frac": 0.4954,
+   "specks": 0
+  },
+  "w": 1273
+ },
+ "global/environment/env_rock_a": {
+  "anchors": {
+   "base": [
+    0.485,
+    0.9798
+   ]
+  },
+  "h": 396,
+  "master": [
+   602,
+   396
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 4404,
+   "light_halo": 0.0,
+   "opaque_frac": 0.7008,
+   "specks": 0
+  },
+  "w": 602
+ },
+ "global/environment/env_shrub_a": {
+  "anchors": {
+   "base": [
+    0.5881,
+    0.9861
+   ]
+  },
+  "h": 649,
+  "master": [
+   755,
+   649
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 55479,
+   "light_halo": 0.0,
+   "opaque_frac": 0.6147,
+   "specks": 0
+  },
+  "w": 755
+ },
+ "global/fx/fx_gull_down": {
+  "anchors": {
+   "base": [
+    0.9667,
+    0.9663
+   ]
+  },
+  "h": 267,
+  "master": [
+   360,
+   267
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 3680,
+   "light_halo": 0.0,
+   "opaque_frac": 0.2919,
+   "specks": 0
+  },
+  "w": 360
+ },
+ "global/fx/fx_gull_up": {
+  "anchors": {
+   "base": [
+    0.1274,
+    0.9787
+   ]
+  },
+  "h": 422,
+  "master": [
+   314,
+   422
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 5539,
+   "light_halo": 0.0,
+   "opaque_frac": 0.3596,
+   "specks": 0
+  },
+  "w": 314
+ },
+ "global/fx/fx_smoke_a": {
+  "anchors": {
+   "base": [
+    0.4318,
+    0.9716
+   ]
+  },
+  "h": 1232,
+  "master": [
+   264,
+   1232
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 44778,
+   "light_halo": 0.0,
+   "opaque_frac": 0.2621,
+   "specks": 0
+  },
+  "w": 264
+ },
+ "global/fx/fx_smoke_b": {
+  "anchors": {
+   "base": [
+    0.5161,
+    0.97
+   ]
+  },
+  "h": 1034,
+  "master": [
+   372,
+   1034
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 34390,
+   "light_halo": 0.0,
+   "opaque_frac": 0.3485,
+   "specks": 0
+  },
+  "w": 372
+ },
+ "global/heads/head_bun_headband": {
+  "anchors": {
+   "neck": [
+    0.5765,
+    0.9719
+   ]
+  },
+  "h": 249,
+  "master": [
+   255,
+   249
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 1923,
+   "light_halo": 0.0,
+   "opaque_frac": 0.5763,
+   "specks": 0
+  },
+  "upx": 0.1322,
+  "w": 255
+ },
+ "global/heads/head_child_curls": {
+  "anchors": {
+   "neck": [
+    0.4376,
+    0.9857
+   ]
+  },
+  "h": 558,
+  "master": [
+   425,
+   558
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 8864,
+   "light_halo": 0.0,
+   "opaque_frac": 0.6047,
+   "specks": 0
+  },
+  "upx": 0.04643,
+  "w": 425
+ },
+ "global/heads/head_elder_beard": {
+  "anchors": {
+   "neck": [
+    0.401,
+    0.9705
+   ]
+  },
+  "h": 237,
+  "master": [
+   197,
+   237
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 1497,
+   "light_halo": 0.0,
+   "opaque_frac": 0.6582,
+   "specks": 0
+  },
+  "upx": 0.1322,
+  "w": 197
+ },
+ "global/heads/head_petasos": {
+  "anchors": {
+   "neck": [
+    0.4548,
+    0.9745
+   ]
+  },
+  "h": 274,
+  "master": [
+   354,
+   274
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 2437,
+   "light_halo": 0.0,
+   "opaque_frac": 0.4363,
+   "specks": 0
+  },
+  "upx": 0.1322,
+  "w": 354
+ },
+ "global/heads/head_trader_curls_beard": {
+  "anchors": {
+   "neck": [
+    0.4631,
+    0.9869
+   ]
+  },
+  "h": 612,
+  "master": [
+   488,
+   612
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 14644,
+   "light_halo": 0.0,
+   "opaque_frac": 0.6375,
+   "specks": 0
+  },
+  "upx": 0.04643,
+  "w": 488
+ },
+ "global/heads/head_worker_headband": {
+  "anchors": {
+   "neck": [
+    0.4157,
+    0.9864
+   ]
+  },
+  "h": 587,
+  "master": [
+   445,
+   587
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 6499,
+   "light_halo": 0.0,
+   "opaque_frac": 0.6146,
+   "specks": 0
+  },
+  "upx": 0.04643,
+  "w": 445
+ },
+ "global/props/prop_amphora_a": {
+  "anchors": {
+   "base": [
+    0.4889,
+    0.9901
+   ]
+  },
+  "h": 906,
+  "master": [
+   407,
+   906
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 9132,
+   "light_halo": 0.0,
+   "opaque_frac": 0.6535,
+   "specks": 0
+  },
+  "w": 407
+ },
+ "global/props/prop_basket_produce": {
+  "anchors": {
+   "base": [
+    0.4807,
+    0.9895
+   ],
+   "handle": [
+    0.4551,
+    0.0092
+   ]
+  },
+  "h": 761,
+  "master": [
+   701,
+   761
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 14584,
+   "light_halo": 0.0,
+   "opaque_frac": 0.5559,
+   "specks": 0
+  },
+  "w": 701
+ },
+ "global/props/prop_crate": {
+  "anchors": {
+   "base": [
+    0.5,
+    0.987
+   ]
+  },
+  "h": 614,
+  "master": [
+   596,
+   614
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 6140,
+   "light_halo": 0.0,
+   "opaque_frac": 0.7809,
+   "specks": 0
+  },
+  "w": 596
+ },
+ "global/props/prop_fishing_net": {
+  "anchors": {
+   "base": [
+    0.4921,
+    0.9863
+   ]
+  },
+  "h": 584,
+  "master": [
+   823,
+   584
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 13531,
+   "light_halo": 0.0,
+   "opaque_frac": 0.6181,
+   "specks": 0
+  },
+  "w": 823
+ },
+ "global/props/prop_pithos": {
+  "anchors": {
+   "base": [
+    0.4891,
+    0.9906
+   ]
+  },
+  "h": 849,
+  "master": [
+   689,
+   849
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 6963,
+   "light_halo": 0.0,
+   "opaque_frac": 0.7565,
+   "specks": 0
+  },
+  "w": 689
+ },
+ "global/props/prop_staff": {
+  "anchors": {
+   "base": [
+    0.5818,
+    0.993
+   ],
+   "top": [
+    0.4818,
+    0.0055
+   ]
+  },
+  "h": 1283,
+  "master": [
+   110,
+   1283
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 7835,
+   "light_halo": 0.0,
+   "opaque_frac": 0.5217,
+   "specks": 0
+  },
+  "w": 110
+ },
+ "global/ships/ship_fishing_boat": {
+  "anchors": {
+   "base": [
+    0.5211,
+    0.9807
+   ]
+  },
+  "h": 466,
+  "master": [
+   925,
+   466
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 7498,
+   "light_halo": 0.0,
+   "opaque_frac": 0.4057,
+   "specks": 0
+  },
+  "w": 925
+ },
+ "global/ships/ship_merchant": {
+  "anchors": {
+   "keel": [
+    0.5,
+    0.9939
+   ],
+   "yard": [
+    0.3213,
+    0.1366
+   ]
+  },
+  "h": 1310,
+  "master": [
+   1959,
+   1310
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 68718,
+   "light_halo": 0.0,
+   "opaque_frac": 0.4239,
+   "specks": 0
+  },
+  "w": 1959
+ },
+ "global/ships/ship_merchant_sail": {
+  "anchors": {
+   "keel": [
+    0.5,
+    0.9939
+   ],
+   "yard": [
+    0.3213,
+    0.1366
+   ]
+  },
+  "h": 1310,
+  "master": [
+   1959,
+   1310
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 68718,
+   "light_halo": 0.0,
+   "opaque_frac": 0.4239,
+   "specks": 0
+  },
+  "w": 1959
+ },
+ "global/ships/ship_small_sail": {
+  "anchors": {
+   "base": [
+    0.4449,
+    0.9905
+   ]
+  },
+  "h": 952,
+  "master": [
+   908,
+   952
+  ],
+  "qa": {
+   "dark_halo": 0.0,
+   "edge_px": 23022,
+   "light_halo": 0.0,
+   "opaque_frac": 0.4477,
+   "specks": 0
+  },
+  "w": 908
+ }
+}

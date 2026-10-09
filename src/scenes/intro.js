@@ -1,7 +1,22 @@
-// Title scene: the Acropolis at first light. Loops gently under the title.
-import { C, mix, lighten, darken } from '../art/palette.js';
+// Title scene: the Acropolis at first light, under the title UI. One painted environment plate (generated
+// per asset, the same illustrated world as Chapter 1) with sprite life on top: drifting clouds, gulls,
+// water shimmer masked to the painted sea, the elder and the child from Chapter 1 on the rig, and framing
+// foliage. The camera drifts in a slow loop.
+// `citadel()` below is the code-drawn citadel still used by chapters 3-6 (unchanged in this pass).
+import { C, mix, lighten } from '../art/palette.js';
 import * as S from '../art/scenery.js';
 import { rng } from '../art/util.js';
+import { sprite, preloadImages } from '../art/sprite.js';
+import { Cutout } from '../art/cutout.js';
+import { plate, skyLife, swayAll } from '../art/stage.js';
+
+const USES = [
+  'intro_env', 'intro_sea_mask', 'env_cloud_a', 'env_cloud_c', 'fx_gull_up', 'fx_gull_down', 'fx_smoke_a',
+  'env_rock_a', 'env_fg_olive_branch', 'env_fg_grass_clump', 'prop_staff',
+  'char_hand_open', 'char_hand_grip', 'char_foot_sandal', 'costume_himation_elder', 'costume_tunic_child', 'head_elder_beard', 'head_child_curls',
+];
+let ready = null;
+export function preload() { return (ready ||= preloadImages(USES)); }
 
 /** Limestone citadel with a flat top and buttressed wall; anchored at ground centre. */
 export function citadel({ w = 700, h = 260, lit = '#DBC59E', shade = '#8E7761', seed = 3 }) {
@@ -49,74 +64,54 @@ export function citadel({ w = 700, h = 260, lit = '#DBC59E', shade = '#8E7761', 
 }
 
 export function build(sc) {
-  const sky = sc.layer('sky', 0.03);
-  const far = sc.layer('far', 0.12);
-  const sea = sc.layer('sea', 0.22);
-  const mid = sc.layer('mid', 0.4);
-  const rock = sc.layer('rock', 0.62);
-  const near = sc.layer('near', 0.95);
-  const fg = sc.layer('fg', 1.3);
+  const world = sc.layer('plate', 1.0);
+  const sky = sc.layer('sky-life', 0.85);
+  const ground = sc.layer('ground', 1.0);
+  const front = sc.layer('front', 1.25);
+  const add = (L, m) => sc.add(L, m);
+  const GROUND = 902;
 
-  // ---- sky
-  sc.add(sky, S.daySky());
-  sc.add(sky, S.sun({ x: 300, y: 600, r: 56, glowR: 760, glow: '#FFD79A', op: 1 }));
-  sc.add(sky, S.rays({ x: 300, y: 600, n: 11, spread: 110, dir: -45, len: 1700, op: 0.2 }));
-  sc.add(sky, S.driftCloud({ x: 160, y: 190, s: 1.5, tone: 'warm', seed: 2, w: 1.4, vx: 3.2, op: 0.9 }));
-  sc.add(sky, S.driftCloud({ x: 980, y: 120, s: 1.2, tone: 'white', seed: 5, w: 1.2, vx: 2.4, op: 0.85 }));
-  sc.add(sky, S.driftCloud({ x: 1450, y: 260, s: 1.0, tone: 'warm', seed: 9, w: 1, vx: 3.8, op: 0.85 }));
-  sc.add(sky, S.driftCloud({ x: 600, y: 330, s: 0.8, tone: 'gold', seed: 12, w: 1.3, vx: 2.8, op: 0.8 }));
+  plate(sc, world, 'intro_env', 'intro_sea_mask', { sun: [186, 359], horizon: 429, glitterW: 300, id: 'in' });
+  // warm bloom around the low sun (code light)
+  const glowG = S.rgrad([[0, '#FFE6B0', 0.85], [0.3, '#FFD38A', 0.3], [1, '#FFD38A', 0]]);
+  const glow = add(world, `<g style="mix-blend-mode:screen"><defs>${glowG.def}</defs><circle cx="186" cy="359" r="460" fill="${glowG.ref}"/></g>`);
+  add(world, `<g style="mix-blend-mode:screen">${S.rays({ x: 186, y: 359, n: 11, spread: 120, dir: -40, len: 1600, op: 0.12 })}</g>`);
+  // a thread of smoke from the lower town
+  const smoke = add(world, sprite('fx_smoke_a', { x: 1640, y: 515, w: 14, op: 0.5 }));
 
-  // ---- far: hazy mountains
-  const haze = '#E9CFAE';
-  sc.add(far, S.mountains({ base: 650, amp: 150, lit: '#CDBCB7', shade: '#8C93AE', seed: 5, snow: null }));
-  sc.add(far, S.hills({ base: 640, amp: 28, top: '#B7B3B8', bottom: '#9CA2B5', seed: 8, freq: 0.006 }));
+  skyLife(sc, sky, {
+    clouds: [['env_cloud_a', 640, 120, 330, 2.2, 0.85], ['env_cloud_c', 1460, 50, 300, 1.6, 0.8]],
+    gulls: [[520, 70, 0.9, 24, 0], [600, 52, 0.75, 22, 1.1], [1500, 96, 0.7, 18, 2.4]],
+  });
 
-  // ---- sea
-  sc.add(sea, S.sea({ y: 650, top: '#8DB0C8', bottom: '#2F5C8C', rows: 10, line: '#F4EEDD', rowOp: 0.7, seed: 4 }));
-  sc.add(sea, S.glitter({ x: 300, y: 655, h: 260, w: 340, n: 60, color: '#FFF3D2' }));
-  sc.add(sea, S.island({ x: 520, y: 654, w: 280, h: 40, color: '#8892A8', light: '#C4BDBC', seed: 4 }));
-  sc.add(sea, S.island({ x: 1500, y: 655, w: 360, h: 56, color: '#7C869F', light: '#B9B3B6', seed: 8, houses: false }));
-  sc.add(sea, S.drifter(`<g transform="translate(420 735)">${S.ship({ type: 'merchant', s: 0.46, hull: '#33261F' })}</g>`, { vx: 5, x0: 0, bob: 0 }));
-  sc.add(sea, S.drifter(`<g transform="translate(980 700)">${S.ship({ type: 'boat', s: 0.52, dir: -1, hull: '#33261F' })}</g>`, { vx: -3, x0: 0, bob: 0 }));
+  // the elder and the child from Chapter 1 watch the city wake
+  add(ground, sprite('env_rock_a', { x: 548, y: GROUND + 6, w: 92 }));
+  const elder = new Cutout(sc, ground.g, { x: 430, y: GROUND, s: 1.28, costume: 'costume_himation_elder', head: 'head_elder_beard', seed: 1 });
+  elder.set('relaxed');
+  elder.hold('B', 'prop_staff', { w: 11, grip: [0.5, 0.22], rot: 2, mode: 'world', behind: true });
+  elder.set({ armB: 22, elbowB: 52, head: -2 });
+  const child = new Cutout(sc, ground.g, { x: 540, y: GROUND - 8, s: 1.0, costume: 'costume_tunic_child', head: 'head_child_curls', seed: 2 });
+  child.set('sit'); child.p.lean = 8; child.p.head = 6;
 
-  // ---- mid: coastal village + hills
-  sc.add(mid, S.hills({ base: 730, amp: 36, top: '#9DA27A', bottom: '#6F7B52', seed: 6, freq: 0.005 }));
-  sc.add(mid, `<g transform="translate(130 780)">${S.village({ n: 9, seed: 12, scale: 0.8, haze: { color: '#EBD7B6', amt: 0.28 } })}</g>`);
-  sc.add(mid, S.cypress(80, 786, 120, '#4A5A36'));
-  sc.add(mid, S.cypress(112, 790, 90, '#4A5A36'));
-  sc.add(mid, S.olive(560, 800, 0.6, { leaf: '#869364' }));
-  sc.add(mid, S.olive(1640, 790, 0.7, { leaf: '#869364' }));
+  const sway = [];
+  const branch = add(front, `<g transform="translate(-60 -140)"><g>${sprite('env_fg_olive_branch', { x: 0, y: 0, w: 280, an: 'top' })}</g></g>`);
+  sway.push({ el: branch.firstElementChild, amp: 1.5, ph: 0.4, sp: 0.5 });
+  const grass = add(front, sprite('env_fg_grass_clump', { x: 140, y: 1030, w: 170 }));
+  sway.push({ el: grass.firstElementChild, amp: 1.3, ph: 1.2, sp: 0.8 });
+  swayAll(sc, sway);
 
-  // ---- rock: the Acropolis
-  sc.add(rock, `<g transform="translate(1230 846)">${citadel({ w: 700, h: 220 })}</g>`);
-  sc.add(rock, `<g transform="translate(1230 ${846 - 220 - 8})">${S.temple({ w: 430, h: 140, steps: 3, tone: [C.ivory, '#D9BF93', '#9C8467'] })}</g>`);
-  sc.add(rock, S.cypress(1002, 624, 92, '#475733'));
-  sc.add(rock, S.cypress(1500, 626, 84, '#475733'));
-  sc.add(rock, S.cypress(1534, 628, 62, '#475733'));
-  sc.add(rock, S.lightShaft({ x: 380, y: 100, w: 90, h: 760, tilt: -22, op: 0.1 }));
-  sc.add(rock, S.flock({ n: 7, x: 0, y: 380, s: 0.9, vx: 28, spread: 110 }));
-  sc.add(rock, S.flock({ n: 4, x: 400, y: 270, s: 0.65, vx: 22, spread: 60, seed: 9 }));
+  sc.particle('motes', { n: 40, color: ['#FFF0C8', '#FFE2A0'], op: 0.5, size: 2.2, vx: 0.006, vy: -0.004 });
 
-  // ---- near: foreground ground, olive, figures
-  sc.add(near, `<path d="M-900 900 L-900 835 C-400 800 200 820 520 842 C860 866 1200 850 1700 840 C2200 832 2500 840 2600 850 L2600 1500 L-900 1500 Z" fill="${darken('#6B7A48', 0.12)}"/>`);
-  sc.add(near, `<path d="M-900 900 L-900 860 C-300 838 100 858 440 872 C800 888 1200 880 1700 872 L2600 870 L2600 1500 L-900 1500 Z" fill="#59663C"/>`);
-  sc.add(near, S.grass(0, 868, 600, '#8C9A60', 4, 0.2));
-  sc.add(near, S.olive(1480, 905, 1.4, { leaf: '#7F8F5C' }));
-  sc.add(fg, S.grass(-100, 900, 1900, '#97A468', 6, 0.12));
-  sc.add(near, S.rock(350, 890, 1.55, '#B1A38C'));
-  sc.add(fg, S.rock(1560, 925, 1.9, '#A39684'));
-
-  // ---- the two watchers (a nod to the reference sheet)
-  const trav = sc.fig(near, { x: 218, y: 872, s: 1.55, outfit: 'chiton', color: C.ivory, trim: C.terracotta, cloak: C.olive, cloakType: 'drape', facing: 1 });
-  trav.set('relaxed').hold('B', 'staff', { len: 150, mode: 'world', rot: -2 });
-  trav.p.armB = 6; trav.p.elbowB = 70;
-  const kid = sc.fig(near, { x: 352, y: 890, s: 1.25, outfit: 'chiton', color: C.parchment, trim: C.terracotta });
-  kid.set('sit'); kid.p.lean = 10; kid.p.head = 8;
-
-  // ---- atmosphere
-  sc.particle('motes', { n: 46, color: ['#FFF0C8', '#FFE2A0'], op: 0.55, size: 2.4, vx: 0.006, vy: -0.004 });
-
-  // ---- camera drift (looping)
-  sc.cam.x = 760; sc.cam.z = 1.02;
-  sc.tl.to(sc.cam, { x: 860, y: 440, z: 1.06, duration: 26, ease: 'sine.inOut', yoyo: true, repeat: -1 });
+  // ---- looping drift (camera stays on the plate: z 0.95 -> frame 1684 x 947)
+  const tl = sc.tl;
+  sc.cam.x = 1160; sc.cam.y = 456; sc.cam.z = 0.95;
+  tl.to(sc.cam, { x: 1230, y: 446, z: 0.965, duration: 26, ease: 'sine.inOut', yoyo: true, repeat: -1 }, 0);
+  tl.to(glow, { opacity: 0.7, duration: 7, ease: 'sine.inOut', yoyo: true, repeat: -1 }, 0);
+  tl.to(child.p, { head: -8, duration: 3.5, ease: 'sine.inOut', yoyo: true, repeat: -1, repeatDelay: 2.5 }, 2);
+  tl.to(elder.p, { head: -6, lean: 2, duration: 4.5, ease: 'sine.inOut', yoyo: true, repeat: -1, repeatDelay: 3 }, 5);
+  sc.tick((t) => {
+    const u = (t * 0.06) % 1;
+    smoke.setAttribute('transform', `translate(${(1640 + u * 8).toFixed(1)} ${(515 - u * 22).toFixed(1)}) scale(${(0.75 + u * 0.4).toFixed(3)})`);
+    smoke.setAttribute('opacity', (Math.sin(u * Math.PI) * 0.5).toFixed(3));
+  });
 }

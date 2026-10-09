@@ -1,357 +1,197 @@
 // Chapter 1 — Birth of the Greek World.
-// Asset-driven vertical slice: every visible object is an illustrated cut-out from the approved
-// production sheets (assets/), layered in depth and animated with code. Code draws only light and
-// atmosphere (sky gradient, sun, rays, haze, glints, shadows, grading) and the map labels.
+// One coherent illustrated environment plate (the bay, Crete, the terraced hill and Mycenae) with every
+// moving thing as a separate transparent sprite on top: the merchant ship, small boats, the villagers
+// (hybrid cutout rig), props, clouds, gulls, smoke and foreground framing foliage. Code adds only light and
+// atmosphere: dawn grading, sun glow and rays, horizon haze, water shimmer (masked to the painted sea),
+// contact shadows, and the map labels.
 import gsap from 'gsap';
 import * as S from '../art/scenery.js';
-import { sprite, strip, asset, hFor, preloadImages } from '../art/sprite.js';
+import { sprite, asset, preloadImages } from '../art/sprite.js';
 import { Cutout } from '../art/cutout.js';
-import { NS, setAttr, rng } from '../art/util.js';
+import { setAttr } from '../art/util.js';
+import { plate, ship, skyLife, swayAll } from '../art/stage.js';
 
-// Everything this chapter shows; decoded before the chapter mounts (see Player.loadModule).
 const USES = [
-  'mountains_far_soft', 'ch01_bg_islands_blue', 'island_a', 'island_b', 'island_c', 'island_d', 'island_e', 'island_f', 'island_g', 'island_h',
-  'sea_band_far', 'sea_tile_base', 'water_highlights', 'wave_overlay',
-  'cloud_cumulus_01', 'cloud_cumulus_02', 'cloud_cumulus_03', 'cloud_cumulus_04', 'cloud_cumulus_06', 'cloud_cumulus_07', 'cloud_cumulus_08',
-  'gull_01', 'gull_02', 'gull_03',
-  'ch01_prop_crete_island_palace', 'ship_boat_small', 'ship_merchant',
-  'ch01_prop_mycenae_citadel', 'ch01_bg_hillside_terraces', 'ch01_bg_hillside_terraces_b', 'ch01_bg_settlement', 'village_cluster_a',
-  'house_white_a', 'house_white_b', 'smoke_puff_01', 'smoke_puff_02',
-  'tree_olive_large', 'tree_olive_medium', 'tree_olive_small', 'tree_olive_b_small', 'tree_cypress_tall', 'tree_cypress_small',
-  'ch01_bg_shore_olive_tree', 'ch01_bg_beach_right', 'ch01_bg_rock_in_water', 'rock_a', 'rock_b', 'rock_c',
-  'shrub_a', 'shrub_b', 'shrub_c', 'agave', 'grass_tufts_a', 'foliage_overlay',
-  'pithos', 'amphora_a', 'amphora_b', 'basket_produce', 'crate', 'fishing_net', 'olive_branch', 'staff',
-  'chiton_villager_torso', 'chiton_villager_skirt', 'peplos_villager_torso', 'peplos_villager_skirt',
-  'chiton_sailor_torso', 'chiton_sailor_skirt', 'himation_merchant_torso', 'himation_merchant_skirt',
-  'himation_elite_torso', 'himation_elite_skirt', 'chiton_youth_torso', 'chiton_youth_skirt',
-  'beard_long', 'hair_short', 'headband', 'hat_petasos', 'hair_curls', 'head_neutral',
+  'ch01_env', 'ch01_sea_mask', 'ship_merchant', 'ship_merchant_sail', 'ship_fishing_boat', 'ship_small_sail',
+  'env_cloud_b', 'env_cloud_c', 'fx_gull_up', 'fx_gull_down', 'fx_smoke_a', 'fx_smoke_b',
+  'env_rock_a', 'env_agave_a', 'env_shrub_a', 'env_fg_olive_branch', 'env_fg_grass_clump', 'env_olive_sapling_1', 'env_olive_sapling_2',
+  'prop_amphora_a', 'prop_pithos', 'prop_crate', 'prop_basket_produce', 'prop_staff', 'prop_fishing_net',
+  'char_hand_open', 'char_hand_grip', 'char_foot_sandal',
+  'costume_himation_elder', 'costume_tunic_child', 'costume_peplos', 'costume_chiton_farmer', 'costume_himation_trader', 'costume_exomis_worker',
+  'head_elder_beard', 'head_child_curls', 'head_bun_headband', 'head_petasos', 'head_trader_curls_beard', 'head_worker_headband',
 ];
 let ready = null;
 export function preload() { return (ready ||= preloadImages(USES)); }
 
-const HORIZON = 440; // sea-layer y of the horizon line
+const HORIZON = 382;
+const GROUND = 892;   // the foreground path the villagers walk on
 
 export function build(sc) {
   const tl = sc.tl, cam = sc.cam;
   const add = (L, m) => sc.add(L, m);
-  // a named depth band inside a parallax plane (keeps the stack readable without extra compositor layers)
-  const band = (L, name) => {
-    const g = document.createElementNS(NS, 'g');
-    g.setAttribute('data-band', name);
-    L.g.appendChild(g);
-    return { g, depth: L.depth, name };
-  };
 
-  // ================================================================ parallax planes (back to front)
-  const skyL = sc.layer('sky', 0.03);
-  const cloudL = sc.layer('clouds', 0.06);
-  const mtnL = sc.layer('mountains', 0.12);
-  const islL = sc.layer('islands', 0.2);
-  const seaL = sc.layer('sea', 0.25);
-  const nearSea = sc.layer('near-sea', 0.3);
-  const shipL = sc.layer('ship', 0.5);
-  const mycL = sc.layer('mycenae', 0.6);
-  const hillL = sc.layer('hillside', 0.74);
-  const townL = sc.layer('settlement', 0.8);
-  const treeL = sc.layer('trees', 0.86);
-  const ground = sc.layer('ground', 1.0);
-  const frontL = sc.layer('front', 1.3);
+  // ================================================================ planes (back to front)
+  const world = sc.layer('plate', 1.0);        // the painted environment
+  const sky = sc.layer('sky-life', 0.85);      // drifting clouds and gulls, a little further away
+  const sea = sc.layer('sea-life', 1.0);       // ship and boats, on the painted water
+  const ground = sc.layer('ground', 1.0);      // villagers and props on the foreground path
+  const front = sc.layer('front', 1.25);       // framing foliage close to the lens
 
-  const boats = band(nearSea, 'distant-boats');
-  const haze = band(nearSea, 'haze');
-  let crete;
-  const outcrop = band(ground, 'left-outcrop');
-  const beach = band(ground, 'right-beach');
-  const veg = band(ground, 'vegetation');
-  const people = band(ground, 'villagers');
-  const props = band(ground, 'props');
+  // ================================================================ plate + water
+  const { water } = plate(sc, world, 'ch01_env', 'ch01_sea_mask', { sun: [757, 312], horizon: HORIZON, id: 'c1' });
 
-  // ================================================================ 1 sky (code: light only)
-  const skyG = S.grad([[0, '#6D9CC6'], [0.5, '#A7C6DA'], [0.86, '#EAD9C0'], [1, '#F4E2C4']]);
-  add(skyL, `<defs>${skyG.def}</defs><rect x="-1600" y="-700" width="4800" height="1700" fill="${skyG.ref}"/>`);
-  const dawnG = S.grad([[0, '#343B6E'], [0.4, '#7A6390'], [0.7, '#E0977A'], [0.88, '#F5B97F'], [1, '#FAD498']]);
-  const dawn = add(skyL, `<g><defs>${dawnG.def}</defs><rect x="-1600" y="-700" width="4800" height="1700" fill="${dawnG.ref}"/></g>`);
-  const sunG = add(skyL, `<g>${S.sun({ x: 780, y: 330, r: 46, glowR: 640, core: '#FFF2D2', glow: '#FFD8A0' })}${S.rays({ x: 780, y: 330, n: 13, spread: 140, dir: -90, len: 1500, op: 0.16 })}</g>`);
+  // dawn light (code): cool violet sky wash that lifts, sun glow and rays, haze on the horizon
+  const dawnG = S.grad([[0, '#2c2f63', 0.85], [0.55, '#7a5d8c', 0.55], [0.9, '#e39a7c', 0.2], [1, '#f2b07e', 0]]);
+  const dawn = add(world, `<g><defs>${dawnG.def}</defs><rect x="-200" y="-200" width="2730" height="${HORIZON + 220}" fill="${dawnG.ref}"/></g>`);
+  const glowG = S.rgrad([[0, '#FFE6B0', 0.9], [0.3, '#FFD38A', 0.35], [1, '#FFD38A', 0]]);
+  const glow = add(world, `<g style="mix-blend-mode:screen"><defs>${glowG.def}</defs><circle cx="757" cy="312" r="420" fill="${glowG.ref}"/></g>`);
+  const rays = add(world, `<g style="mix-blend-mode:screen">${S.rays({ x: 757, y: 312, n: 13, spread: 150, dir: -90, len: 1400, op: 0.14 })}</g>`);
+  const hzG = S.grad([[0, '#F7E4CC', 0], [0.5, '#F7E4CC', 0.85], [1, '#F7E4CC', 0]]);
+  const mist = add(world, `<g><defs>${hzG.def}</defs><rect x="-200" y="${HORIZON - 70}" width="2730" height="150" fill="${hzG.ref}"/></g>`);
 
-  // ================================================================ 2 clouds (painted, drifting)
-  const clouds = [
-    ['cloud_cumulus_04', 300, 250, 330, 3.2], ['cloud_cumulus_03', 1180, 205, 300, 2.6], ['cloud_cumulus_01', 1650, 300, 260, 3.6],
-    ['cloud_cumulus_08', 620, 120, 340, 2.0], ['cloud_cumulus_06', 1500, 90, 330, 1.7], ['cloud_cumulus_07', -120, 140, 280, 2.3],
-    ['cloud_cumulus_02', 950, 330, 220, 4.0],
-  ].map(([k, x, y, w, vx]) => ({ el: add(cloudL, sprite(k, { x, y, w, ay: 0.5, op: 0.95 })), x, y, vx }));
-  sc.tick((t) => {
-    for (const c of clouds) {
-      let x = c.x + t * c.vx;
-      if (x > 2300) x -= 2900;
-      setAttr(c.el, 'transform', `translate(${x.toFixed(1)} ${c.y})`);
-    }
+  // ================================================================ clouds and gulls (sky plane)
+  skyLife(sc, sky, {
+    clouds: [['env_cloud_b', 520, 70, 300, 2.6, 0.9], ['env_cloud_c', 1150, 40, 360, 1.8, 0.85]],
+    gulls: [[380, 230, 1, 30, 0], [470, 205, 0.8, 27, 1.3], [1150, 160, 0.7, 22, 2.1]],
   });
 
-  // ================================================================ 3 far mountains (+ atmospheric haze, code)
-  add(mtnL, strip('mountains_far_soft', { x0: -700, y: HORIZON + 50 - 100, w: 2600, n: 2, h: 100, op: 0.92 }));
-  add(mtnL, sprite('ch01_bg_islands_blue', { x: 1500, y: HORIZON + 58, w: 760, op: 0.7 }));
-  add(mtnL, sprite('ch01_bg_islands_blue', { x: -60, y: HORIZON + 58, w: 620, op: 0.62, flip: true }));
-  const mHaze = S.grad([[0, '#F3DDC2', 0], [0.6, '#F3DDC2', 0.45], [1, '#F3DDC2', 0.75]]);
-  add(mtnL, `<defs>${mHaze.def}</defs><rect x="-1200" y="${HORIZON - 120}" width="4000" height="190" fill="${mHaze.ref}"/>`);
-
-  // ================================================================ 4 distant islands (sit on the horizon)
-  const IB = HORIZON + 38;
-  for (const [k, x, w, op] of [['island_h', -240, 330, 0.9], ['island_c', 470, 300, 0.92], ['island_e', 860, 120, 0.8], ['island_f', 990, 96, 0.78],
-    ['island_g', 1120, 130, 0.8], ['island_d', 1420, 330, 0.92], ['island_a', 1830, 300, 0.9]]) {
-    add(islL, sprite(k, { x, y: IB, w, op }));
-  }
-
-  // ================================================================ 5 sea: painted bands in perspective + code glints
-  const seaBase = S.grad([[0, '#9DBCCB'], [0.18, '#6E9BBE'], [0.6, '#3D6E9F'], [1, '#2A578A']]);
-  add(seaL, `<defs>${seaBase.def}<linearGradient id="seaFeather" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".22" stop-color="#fff"/><stop offset=".78" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
-    <mask id="seaRow" maskContentUnits="objectBoundingBox"><rect width="1" height="1" fill="url(#seaFeather)"/></mask></defs>
-    <rect x="-1400" y="${HORIZON}" width="4400" height="900" fill="${seaBase.ref}"/>`);
-  add(seaL, strip('sea_band_far', { x0: -1400, y: HORIZON - 1, w: 440, n: 11, h: 70, op: 0.9 }));
-  const rows = [];
-  for (const [y, h, op, dx] of [[HORIZON + 30, 44, 0.55, 0], [HORIZON + 58, 62, 0.62, -300], [HORIZON + 100, 86, 0.66, -800], [HORIZON + 160, 118, 0.7, -200], [HORIZON + 245, 160, 0.72, -1200], [HORIZON + 360, 220, 0.74, -600]]) {
-    const w = h * (asset('sea_tile_base').w / asset('sea_tile_base').h);
-    const n = Math.ceil(4400 / w) + 1;
-    rows.push({ el: add(seaL, `<g mask="url(#seaRow)">${strip('sea_tile_base', { x0: -1400 + dx % w - w, y, w, n: n + 1, h, op })}</g>`), w, sp: 2 + h * 0.02 });
-  }
-  // the warm sun path on the water (code light) and twinkling glints
-  const path = S.grad([[0, '#FFE7B8', 0.0], [0.15, '#FFE7B8', 0.55], [1, '#FFE7B8', 0]], { x1: 0, y1: 0, x2: 0, y2: 1 });
-  const sunPath = add(seaL, `<g><defs>${path.def}</defs><path d="M760 ${HORIZON} L850 ${HORIZON} L1080 900 L530 900 Z" fill="${path.ref}" opacity=".55"/></g>`);
-  const glit = add(seaL, `<g>${S.glitter({ x: 805, y: HORIZON + 6, h: 420, w: 520, n: 80, color: '#FFF4D6', seed: 6 })}</g>`);
-  const hiL = [];
-  const r = rng(11);
-  for (let i = 0; i < 9; i++) {
-    const y = HORIZON + 40 + r() * 380, k = 0.4 + (y - HORIZON) / 380;
-    hiL.push({ el: add(seaL, sprite(i % 3 ? 'water_highlights' : 'wave_overlay', { x: 0, y, w: 150 * k, op: 0.5 })), x: -400 + r() * 2400, y, vx: 1.5 + r() * 3, ph: r() * 6 });
-  }
-  sc.tick((t) => {
-    for (const q of rows) setAttr(q.el, 'transform', `translate(${((Math.sin(t * 0.21 + q.sp) * 10 + t * q.sp) % q.w).toFixed(1)} 0)`);
-    for (const q of hiL) {
-      let x = q.x + t * q.vx; if (x > 2200) x -= 2600;
-      setAttr(q.el, 'transform', `translate(${x.toFixed(1)} ${q.y.toFixed(1)})`);
-      setAttr(q.el, 'opacity', (0.32 + 0.22 * Math.sin(t * 0.9 + q.ph)).toFixed(2));
-    }
-  });
-
-  // ================================================================ 6 distant boats
-  const fboats = [[1260, HORIZON + 66, 70, 1], [1470, HORIZON + 50, 52, -1], [610, HORIZON + 58, 48, 1]].map(([x, y, w, dir], i) => {
-    const el = add(boats, `<g transform="translate(${x} ${y})"><g>${sprite('ship_boat_small', { x: 0, y: 0, w, an: 'water', flip: dir < 0 })}</g></g>`);
-    return { el: el.firstElementChild, ph: i * 1.7, x, y, vx: dir * (2 + i) };
-  });
-  sc.tick((t) => {
-    for (const b of fboats) setAttr(b.el, 'transform', `translate(${(t * b.vx).toFixed(1)} ${(Math.sin(t * 1.1 + b.ph) * 1.4).toFixed(2)}) rotate(${(Math.sin(t * 0.9 + b.ph) * 2.2).toFixed(2)})`);
-  });
-
-  // ================================================================ 7 Crete with the Minoan palace (in the sea plane)
-  crete = band(seaL, 'crete');
-  const creteX = 300, creteY = HORIZON + 96;
-  add(crete, sprite('ch01_prop_crete_island_palace', { x: creteX, y: creteY, w: 390 }));
-  // the island's cut base sinks into a feathered strip of the same painted sea
-  add(crete, `<g mask="url(#seaRow)">${strip('sea_tile_base', { x0: creteX - 330, y: creteY - 20, w: 1700, n: 1, h: 44, op: 1 })}</g>`);
-  add(crete, sprite('wave_overlay', { x: creteX - 90, y: creteY + 10, w: 150, op: 0.55 }));
-  add(crete, sprite('water_highlights', { x: creteX + 110, y: creteY + 12, w: 140, op: 0.5 }));
-
-  // ================================================================ 8 haze (code, burns off)
-  const hz = S.grad([[0, '#F7E4CC', 0], [0.45, '#F7E4CC', 0.9], [1, '#F7E4CC', 0]]);
-  const mist = add(haze, `<g><defs>${hz.def}</defs><rect x="-1400" y="${HORIZON - 90}" width="4400" height="200" fill="${hz.ref}"/></g>`);
-
-  // ================================================================ 9 the merchant ship (hull rocks, sail breathes)
-  const shipW = 270;
-  // the sail breathes: a copy of the ship art clipped to the sail outline, scaled about the mast
-  const sh = asset('ship_merchant');
-  const sailPts = [0, 1, 2, 3, 4, 5, 6].map((i) => sh.an['sail' + i].join(' ')).join(' ');
-  const shipH = (shipW * sh.h) / sh.w;
-  const sx0 = -sh.an.water[0] * shipW, sy0 = -sh.an.water[1] * shipH;
-  const mastX = sx0 + sh.an.mast[0] * shipW, mastY = sy0 + sh.an.mast[1] * shipH;
-  const shipEl = add(shipL, `<g><defs><clipPath id="sailClip" clipPathUnits="objectBoundingBox"><polygon points="${sailPts.split(' ').map(Number).reduce((a, v, i) => a + (i % 2 ? ',' : ' ') + v, '').trim()}"/></clipPath></defs>
-    <g class="hull">${sprite('ship_merchant', { x: 0, y: 0, w: shipW, an: 'water' })}
-      <g class="sail"><image href="${sh.src}" x="${sx0.toFixed(2)}" y="${sy0.toFixed(2)}" width="${shipW}" height="${shipH.toFixed(2)}" preserveAspectRatio="none" clip-path="url(#sailClip)"/></g></g>
-    <g opacity=".5">${sprite('wave_overlay', { x: -shipW * 0.62, y: 6, w: 150 })}</g></g>`);
-  const hull = shipEl.querySelector('.hull');
-  const sail = shipEl.querySelector('.sail');
-  const SHIP_Y = 610;
-  gsap.set(shipEl, { x: -160, y: SHIP_Y });
-  sc.tick((t) => {
-    const k = 1 + 0.018 * (0.5 + 0.5 * Math.sin(t * 1.15)) + 0.006 * Math.sin(t * 2.7);
-    setAttr(sail, 'transform', `translate(${mastX.toFixed(2)} ${mastY.toFixed(2)}) scale(${k.toFixed(4)} ${(1 + (k - 1) * 0.35).toFixed(4)}) translate(${(-mastX).toFixed(2)} ${(-mastY).toFixed(2)})`);
-  });
-  sc.tick((t) => setAttr(hull, 'transform', `translate(0 ${(Math.sin(t * 0.95) * 2.4).toFixed(2)}) rotate(${(Math.sin(t * 0.75 + 0.6) * 1.4).toFixed(2)})`));
-
-  // ================================================================ 10 Mycenae on the mainland summit
-  const MYC = { x: 1650, y: 706, w: 760 };
-  add(mycL, sprite('ch01_prop_mycenae_citadel', { x: MYC.x, y: MYC.y, w: MYC.w }));
-
-  // ================================================================ 11 terraced hillside (rises to the right, base hidden by the beach)
-  add(hillL, sprite('ch01_bg_hillside_terraces_b', { x: 2380, y: 880, w: 960, flip: true }));
-  add(hillL, sprite('ch01_bg_hillside_terraces', { x: 1700, y: 900, w: 1180, flip: true }));
-
-  // ================================================================ 12 settlement + chimney smoke
-  add(townL, sprite('ch01_bg_settlement', { x: 1520, y: 790, w: 400 }));
-  add(townL, sprite('village_cluster_a', { x: 1930, y: 728, w: 270 }));
-  add(townL, sprite('house_white_a', { x: 1270, y: 838, w: 104 }));
-  const smokes = [[1488, 684, 1], [1965, 615, 0.8]].map(([x, y, k], i) =>
-    [0, 1, 2].map((j) => ({ el: add(townL, sprite(j % 2 ? 'smoke_puff_02' : 'smoke_puff_01', { x, y, w: 46 * k, op: 0 })), x, y, k, ph: j / 3 + i * 0.17 })));
+  // ================================================================ chimney smoke on the village (plate houses)
+  const smokes = [[2158, 398, 1], [1985, 455, 0.8]].map(([x, y, k], i) =>
+    [0, 1].map((j) => ({ el: add(world, sprite(j ? 'fx_smoke_b' : 'fx_smoke_a', { x, y, w: 16 * k, op: 0 })), x, y, k, ph: j / 2 + i * 0.23 })));
   sc.tick((t) => {
     for (const set of smokes) for (const q of set) {
-      const u = (t * 0.09 + q.ph) % 1;
-      setAttr(q.el, 'transform', `translate(${(q.x + u * 26 * q.k).toFixed(1)} ${(q.y - u * 70 * q.k).toFixed(1)}) scale(${(0.55 + u * 0.9).toFixed(3)})`);
-      setAttr(q.el, 'opacity', (Math.sin(u * Math.PI) * 0.5).toFixed(3));
+      const u = (t * 0.07 + q.ph) % 1;
+      setAttr(q.el, 'transform', `translate(${(q.x + u * 10 * q.k).toFixed(1)} ${(q.y - u * 26 * q.k).toFixed(1)}) scale(${(0.7 + u * 0.5).toFixed(3)})`);
+      setAttr(q.el, 'opacity', (Math.sin(u * Math.PI) * 0.55).toFixed(3));
     }
   });
 
-  // ================================================================ 13 cypress / olive (sway from the trunk base)
+  // ================================================================ boats and the merchant ship (on the water)
+  const fish = ship(sc, sea, 'ship_fishing_boat', { w: 64, water: 0.86, id: 'fb' });
+  setAttr(fish.el, 'transform', 'translate(1530 640)');
+  const sail2 = ship(sc, sea, 'ship_small_sail', { w: 36, water: 0.86, id: 'ss' });
+  const merchant = ship(sc, sea, 'ship_merchant', { w: 300, water: 0.885, sailKey: 'ship_merchant_sail', id: 'ms' });
+  const sm = asset('ship_merchant');
+  const yard = [merchant.x0 + sm.an.yard[0] * merchant.w, merchant.y0 + sm.an.yard[1] * merchant.h];
+  const shipP = { x: 760, y: 448, s: 0.34 };
+  sc.tick((t) => {
+    setAttr(merchant.el, 'transform', `translate(${shipP.x.toFixed(1)} ${shipP.y.toFixed(1)}) scale(${shipP.s.toFixed(4)})`);
+    setAttr(merchant.hull, 'transform', `translate(0 ${(Math.sin(t * 0.95) * 1.6).toFixed(2)}) rotate(${(Math.sin(t * 0.75 + 0.6) * 1.1).toFixed(2)})`);
+    const k = 1 + 0.016 * (0.5 + 0.5 * Math.sin(t * 1.15)) + 0.005 * Math.sin(t * 2.7);
+    setAttr(merchant.sail, 'transform', `translate(${yard[0].toFixed(1)} ${yard[1].toFixed(1)}) scale(${k.toFixed(4)} ${(1 + (k - 1) * 0.4).toFixed(4)}) translate(${(-yard[0]).toFixed(1)} ${(-yard[1]).toFixed(1)})`);
+    setAttr(fish.hull, 'transform', `translate(0 ${(Math.sin(t * 1.3 + 1) * 1.1).toFixed(2)}) rotate(${(Math.sin(t * 1.1 + 2) * 2.2).toFixed(2)})`);
+    setAttr(sail2.hull, 'transform', `translate(0 ${(Math.sin(t * 1.2 + 3) * 0.7).toFixed(2)}) rotate(${(Math.sin(t * 0.9 + 1) * 1.6).toFixed(2)})`);
+    setAttr(sail2.el, 'transform', `translate(${(1160 + t * 2.2).toFixed(1)} 420)`);
+  });
+
+  // ================================================================ ground: rock seat, plants, props
+  add(ground, sprite('env_rock_a', { x: 556, y: GROUND + 6, w: 92 }));
   const sway = [];
-  const tree = (L, k, x, y, w, amp = 0.5, flip = false) => {
-    const el = add(L, sprite(k, { x, y, w, an: asset(k).an?.base ? 'base' : undefined, flip }));
-    sway.push({ el: el.firstElementChild, amp, ph: x * 0.013, sp: 0.6 + (x % 7) * 0.04 });
-  };
-  tree(treeL, 'tree_cypress_tall', 1236, 870, 46, 0.5);
-  tree(treeL, 'tree_cypress_small', 1268, 874, 36, 0.6);
-  tree(treeL, 'tree_olive_small', 1410, 872, 200, 0.35);
-  tree(treeL, 'tree_olive_b_small', 2150, 846, 190, 0.35);
-  tree(treeL, 'tree_cypress_tall', 2232, 838, 52, 0.5);
-
-  // ================================================================ 14 + 15 ground: painted sand (clip shapes only), headland rocks, beach
-  const sandT = asset('ground_sand_tile');
-  const shade = S.grad([[0, '#FFF1D6', 0.28], [0.25, '#FFF1D6', 0], [0.7, '#5A3A1E', 0.12], [1, '#3A2412', 0.4]]);
-  const wet = S.grad([[0, '#6E5638', 0.42], [1, '#6E5638', 0]], { x1: 0, y1: 0, x2: 1, y2: 0 });
-  add(ground, `<defs><pattern id="sandP" patternUnits="userSpaceOnUse" width="640" height="160"><image href="${sandT.src}" width="640" height="160" preserveAspectRatio="none"/></pattern>${shade.def}${wet.def}</defs>`);
-  const shoreL = 'M-900 1120 L-900 852 C-520 842 -120 834 240 840 C420 843 540 852 620 872 C676 888 708 912 718 960 L720 1120 Z';
-  const shoreR = 'M840 1120 L852 948 C900 912 980 886 1090 872 C1300 852 1560 848 1840 846 C2140 844 2440 850 2800 856 L2800 1120 Z';
-  for (const [band_, d] of [[outcrop, shoreL], [beach, shoreR]]) {
-    add(band_, `<path d="${d}" fill="url(#sandP)"/><path d="${d}" fill="${shade.ref}"/>`);
+  for (const [k, x, y, w, flip] of [['env_agave_a', 700, GROUND + 18, 70], ['env_shrub_a', 1040, GROUND + 14, 84, true], ['env_agave_a', 2180, GROUND + 20, 76, true]]) {
+    const el = add(ground, sprite(k, { x, y, w, flip }));
+    sway.push({ el: el.firstElementChild, amp: 1.1, ph: x * 0.02, sp: 0.9 });
   }
-  add(beach, `<path d="M852 948 C900 912 980 886 1090 872 L1090 900 C990 912 920 934 880 964 Z" fill="${wet.ref}"/>`);
-  // foam where sand meets water (painted wave sprites)
-  for (const [x, y, w, op] of [[905, 922, 140, 0.7], [1010, 888, 130, 0.6], [690, 918, 120, 0.6], [612, 884, 100, 0.5]]) add(beach, sprite('wave_overlay', { x, y, w, op, ay: 0.5 }));
-  // headland: framing olive, rocks at the water's edge
-  tree(outcrop, 'tree_olive_large', 60, 864, 470, 0.35);
-  add(outcrop, sprite('rock_a', { x: 640, y: 930, w: 300 }));
-  add(outcrop, sprite('rock_c', { x: 760, y: 968, w: 210 }));
-  add(outcrop, sprite('rock_b', { x: 544, y: 876, w: 132 }));
-  // beach dressing: the painted beach piece closes the right side
-  add(beach, sprite('ch01_bg_beach_right', { x: 2440, y: 940, w: 820 }));
+  add(ground, sprite('prop_fishing_net', { x: 1120, y: GROUND + 10, w: 66 }));
+  add(ground, sprite('prop_pithos', { x: 2010, y: GROUND + 4, w: 54 }));
+  add(ground, sprite('prop_amphora_a', { x: 2054, y: GROUND + 6, w: 26 }));
+  add(ground, sprite('prop_crate', { x: 1970, y: GROUND + 8, w: 36 }));
+  add(ground, sprite('prop_basket_produce', { x: 2084, y: GROUND + 8, w: 30 }));
+  add(ground, sprite('prop_amphora_a', { x: 372, y: GROUND - 2, w: 24 }));
+  const sap1 = add(ground, sprite('env_olive_sapling_1', { x: 1880, y: GROUND + 6, w: 22 }));
+  const sap2 = add(ground, sprite('env_olive_sapling_2', { x: 1880, y: GROUND + 6, w: 24 }));
 
-  // ================================================================ 16 vegetation at ground level
-  for (const [k, x, y, w, flip] of [['agave', 210, 862, 110], ['grass_tufts_a', 330, 858, 80], ['shrub_c', 470, 862, 70], ['grass_tufts_a', 980, 902, 96, true],
-    ['shrub_a', 1180, 868, 120], ['grass_tufts_a', 1350, 862, 80, true], ['shrub_b', 1610, 860, 92], ['grass_tufts_a', 1980, 860, 90], ['agave', 2330, 878, 120, true], ['shrub_a', 2050, 862, 120, true]]) {
-    const el = add(veg, sprite(k, { x, y, w, flip }));
-    sway.push({ el: el.firstElementChild, amp: 1.2, ph: x * 0.02, sp: 0.9 });
-  }
-  sc.tick((t) => {
-    for (const s_ of sway) setAttr(s_.el, 'transform', `rotate(${(Math.sin(t * s_.sp + s_.ph) * s_.amp + Math.sin(t * s_.sp * 2.3 + s_.ph) * s_.amp * 0.25).toFixed(3)})`);
-  });
-
-  // ================================================================ 17 villagers (hybrid cutout rig)
-  const elder = new Cutout(sc, people.g, { x: 392, y: 848, s: 1.62, costume: 'himation_elite', head: 'beard_long', seed: 1 });
+  // ================================================================ villagers (hybrid cutout rig)
+  const S1 = 1.28;
+  const elder = new Cutout(sc, ground.g, { x: 440, y: GROUND, s: S1, costume: 'costume_himation_elder', head: 'head_elder_beard', seed: 1 });
   elder.set('relaxed');
-  elder.hold('B', 'staff', { w: 9, grip: [0.5, 0.22], rot: 2, mode: 'world', behind: true });
-  elder.set({ armB: 24, elbowB: 54 });
-  const child = new Cutout(sc, people.g, { x: 540, y: 874, s: 1.1, costume: 'chiton_youth', head: 'hair_short', seed: 2 });
+  elder.hold('B', 'prop_staff', { w: 11, grip: [0.5, 0.22], rot: 2, mode: 'world', behind: true });
+  elder.set({ armB: 22, elbowB: 52 });
+  const child = new Cutout(sc, ground.g, { x: 548, y: GROUND - 8, s: 1.0, costume: 'costume_tunic_child', head: 'head_child_curls', seed: 2 });
   child.set('sit');
-
-  const carrier = new Cutout(sc, people.g, { x: 1170, y: 878, s: 1.38, costume: 'peplos_villager', head: 'headband', seed: 3 });
+  const carrier = new Cutout(sc, ground.g, { x: 700, y: GROUND + 4, s: S1, costume: 'costume_peplos', head: 'head_bun_headband', seed: 3 });
   carrier.set('carryHead'); carrier.p.swingF = 0;
-  carrier.hold('head', 'amphora_a', { w: 34, grip: [0.5, 0.96], dy: 2 });
-
-  const farmer = new Cutout(sc, people.g, { x: 2080, y: 884, s: 1.42, costume: 'chiton_villager', head: 'hat_petasos', facing: -1, seed: 4 });
-  farmer.set({ armB: 30, elbowB: 70 }); farmer.p.swingB = 0.15;
-  farmer.hold('B', 'basket_produce', { w: 40, grip: [0.5, 0.18], rot: 0, mode: 'world' });
-
-  const trader = new Cutout(sc, people.g, { x: 1000, y: 892, s: 1.4, costume: 'himation_merchant', head: 'hair_curls', seed: 5 });
+  carrier.hold('head', 'prop_amphora_a', { w: 15, grip: [0.5, 0.97], dx: 1, dy: 1 });
+  carrier.setHand('F', 'char_hand_grip');
+  const farmer = new Cutout(sc, ground.g, { x: 2240, y: GROUND + 2, s: S1, costume: 'costume_chiton_farmer', head: 'head_petasos', facing: -1, seed: 4 });
+  farmer.set({ armB: 28, elbowB: 66 }); farmer.p.swingB = 0.15;
+  farmer.hold('B', 'prop_basket_produce', { w: 24, grip: [0.46, 0.06], mode: 'world' });
+  const trader = new Cutout(sc, ground.g, { x: 1600, y: GROUND + 6, s: S1, costume: 'costume_himation_trader', head: 'head_trader_curls_beard', facing: -1, seed: 5 });
   trader.set('relaxed');
+  const planter = new Cutout(sc, ground.g, { x: 1915, y: GROUND + 4, s: S1, costume: 'costume_exomis_worker', head: 'head_worker_headband', facing: -1, seed: 6 });
 
-  const planter = new Cutout(sc, people.g, { x: 1890, y: 872, s: 1.36, costume: 'chiton_sailor', head: 'head_neutral', facing: -1, seed: 6 });
+  // ================================================================ front framing (closest to the lens)
+  const branch = add(front, `<g transform="translate(-150 -120)"><g>${sprite('env_fg_olive_branch', { x: 0, y: 0, w: 300, an: 'top' })}</g></g>`);
+  sway.push({ el: branch.firstElementChild, amp: 1.6, ph: 0.4, sp: 0.55 });
+  const grass = add(front, sprite('env_fg_grass_clump', { x: 2420, y: 1010, w: 190, flip: true }));
+  sway.push({ el: grass.firstElementChild, amp: 1.4, ph: 1.7, sp: 0.8 });
+  add(front, sprite('env_agave_a', { x: -40, y: 1030, w: 200 }));
+  swayAll(sc, sway);
 
-  // ================================================================ 18 props
-  add(props, sprite('pithos', { x: 1736, y: 872, w: 46 }));
-  add(props, sprite('amphora_b', { x: 1776, y: 878, w: 46 }));
-  add(props, sprite('crate', { x: 1700, y: 882, w: 48 }));
-  add(props, sprite('basket_produce', { x: 1812, y: 880, w: 40 }));
-  add(props, sprite('fishing_net', { x: 1120, y: 914, w: 96 }));
-  add(props, sprite('amphora_a', { x: 268, y: 860, w: 46 }));
-  const sapling = add(props, sprite('olive_branch', { x: 1846, y: 876, w: 40, ax: 0.18, ay: 0.92, attrs: 'transform="rotate(-48)"' }));
-
-  // ================================================================ 19 very-front framing (parallax 1.3)
-  const leaves = add(frontL, `<g transform="translate(-120 -40)"><g>${sprite('foliage_overlay', { x: 0, y: 0, w: 380, ax: 0.2, ay: 0.05, flip: true, attrs: 'transform="rotate(160)"' })}</g></g>`);
-  sway.push({ el: leaves.firstElementChild, amp: 1.4, ph: 0.3, sp: 0.55 });
-  add(frontL, sprite('agave', { x: -40, y: 1010, w: 230 }));
-  add(frontL, sprite('rock_c', { x: 2120, y: 1060, w: 340 }));
-  add(frontL, sprite('grass_tufts_a', { x: 2290, y: 1012, w: 170, flip: true }));
-  add(frontL, sprite('shrub_c', { x: 1500, y: 1050, w: 150 }));
-
-  // gulls (two-frame flap, painted frames swapped like limited animation)
-  const gulls = [[200, 230, 0.9, 26], [330, 200, 0.7, 22], [-60, 280, 0.8, 24], [1300, 160, 0.6, 18]].map(([x, y, k, vx], i) => {
-    const el = add(cloudL, `<g>${sprite('gull_01', { x: 0, y: 0, w: 38 * k, ay: 0.5 })}${sprite('gull_02', { x: 0, y: 4 * k, w: 34 * k, ay: 0.5 })}</g>`);
-    return { el, a: el.children[0], b: el.children[1], x, y, vx, ph: i * 0.37 };
-  });
-  sc.tick((t) => {
-    for (const g of gulls) {
-      let x = g.x + t * g.vx; if (x > 2200) x -= 2700;
-      const up = Math.floor((t + g.ph) * 6) % 3 !== 2;
-      setAttr(g.el, 'transform', `translate(${x.toFixed(1)} ${(g.y + Math.sin(t * 0.6 + g.ph * 5) * 12).toFixed(1)})`);
-      setAttr(g.a, 'opacity', up ? 1 : 0); setAttr(g.b, 'opacity', up ? 0 : 1);
-    }
-  });
-
-  sc.particle('motes', { n: 30, color: ['#FFF0C8', '#FFE2A0'], op: 0.42, size: 2, vx: 0.004, vy: -0.003 });
+  sc.particle('motes', { n: 26, color: ['#FFF0C8', '#FFE2A0'], op: 0.4, size: 2, vx: 0.004, vy: -0.003 });
   const tint = sc.tint('#2a3270');
 
   // ================================================================ STORY (34 s, same beats as before)
-  cam.x = 720; cam.y = 560; cam.z = 1.3;
-  sc.pan(0, 8, { x: 820, y: 520, z: 1.14 }, 'power2.out');
-  sc.pan(8, 8, { x: 930, y: 505 }, 'sine.inOut');
-  sc.pan(15.6, 7.4, { x: 1430, y: 500, z: 1.12 }, 'power2.inOut');
-  sc.pan(24.5, 9.5, { x: 1170, y: 430, z: 0.9 }, 'power2.inOut');
+  // camera bounds: the frame must stay on the plate (x 0..2330, y -55..945)
+  cam.x = 700; cam.y = 585; cam.z = 1.25;
+  sc.pan(0, 8, { x: 770, y: 562, z: 1.18 }, 'power2.out');
+  sc.pan(8, 8, { x: 960, y: 560, z: 1.16 }, 'sine.inOut');
+  sc.pan(16, 8.5, { x: 1440, y: 552, z: 1.16 }, 'power2.inOut');
+  sc.pan(24.5, 9.5, { x: 1222, y: 445, z: 0.9 }, 'power2.inOut');
 
-  // dawn → day: tint lifts, violet sky cross-fades to day, sun climbs, haze burns off
-  gsap.set(tint, { opacity: 0.3 });
+  // dawn -> morning: the violet wash and the tint lift, the sun blooms, haze burns off
+  gsap.set(tint, { opacity: 0.32 });
   tl.to(tint, { opacity: 0, duration: 8, ease: 'power1.inOut' }, 0);
-  tl.fromTo(dawn, { opacity: 1 }, { opacity: 0, duration: 11, ease: 'power1.inOut' }, 0);
-  tl.fromTo(sunG, { y: 150 }, { y: 0, duration: 10, ease: 'power2.out' }, 0.2);
-  tl.fromTo(sunPath, { opacity: 1 }, { opacity: 0.4, duration: 13, ease: 'sine.inOut' }, 0);
-  tl.fromTo(glit, { opacity: 0.55 }, { opacity: 1, duration: 4, ease: 'power1.in' }, 1.5);
-  tl.fromTo(mist, { opacity: 1 }, { opacity: 0.18, duration: 14, ease: 'power1.inOut' }, 1);
+  tl.fromTo(dawn, { opacity: 1 }, { opacity: 0, duration: 10, ease: 'power1.inOut' }, 0);
+  tl.fromTo(glow, { opacity: 0.35 }, { opacity: 1, duration: 9, ease: 'sine.inOut' }, 0);
+  tl.fromTo(rays, { opacity: 0 }, { opacity: 1, duration: 7, ease: 'sine.inOut' }, 1);
+  tl.fromTo(water, { opacity: 0.5 }, { opacity: 1, duration: 6, ease: 'sine.in' }, 1);
+  tl.fromTo(mist, { opacity: 1 }, { opacity: 0.12, duration: 14, ease: 'power1.inOut' }, 1);
 
-  // the merchant ship crosses the bay
-  tl.fromTo(shipEl, { x: -160, y: SHIP_Y }, { x: 830, y: SHIP_Y + 22, duration: 17.5, ease: 'sine.inOut' }, 4.0);
+  // the merchant ship sails in from the far side of the bay and grows as it approaches the beach
+  tl.fromTo(shipP, { x: 760, y: 448, s: 0.34 }, { x: 1210, y: 640, s: 0.88, duration: 19, ease: 'sine.inOut' }, 2.5);
 
   // watchers: the elder points out to sea, the child looks up and around
   elder.go(tl, 3.4, 1.3, { armF: 82, elbowF: 6, lean: 3, head: -3 });
-  elder.go(tl, 8.4, 1.5, { armF: 12, elbowF: 18, lean: 1, head: 0 });
-  elder.go(tl, 17.2, 1.3, { armF: 76, elbowF: 8, lean: 2, head: -2 });
-  elder.go(tl, 21.5, 1.4, { armF: 10, elbowF: 18, lean: 0, head: 0 });
-  tl.to(child.p, { head: -10, duration: 1.4, ease: 'sine.inOut' }, 4.2);
+  elder.go(tl, 8.4, 1.5, { armF: 10, elbowF: 16, lean: 1, head: 0 });
+  elder.go(tl, 15.6, 1.3, { armF: 72, elbowF: 8, lean: 2, head: -2 });
+  elder.go(tl, 20.0, 1.4, { armF: 9, elbowF: 16, lean: 0, head: 0 });
+  tl.to(child.p, { head: -12, duration: 1.4, ease: 'sine.inOut' }, 4.2);
   tl.to(child.p, { head: 6, duration: 1.6, ease: 'sine.inOut' }, 10);
   tl.to(child.p, { head: -6, armF: 70, elbowF: 30, duration: 1.2, ease: 'power2.inOut' }, 13.6);
-  tl.to(child.p, { armF: 34, elbowF: 66, duration: 1.2, ease: 'power2.inOut' }, 16.2);
+  tl.to(child.p, { armF: 34, elbowF: 62, duration: 1.2, ease: 'power2.inOut' }, 16.2);
 
-  // the water-carrier crosses the beach with an amphora on her head
-  carrier.walk(tl, 12.4, 1520, 8.6, { ease: 'sine.inOut' });
+  // the water-carrier crosses the path with an amphora on her head
+  carrier.walk(tl, 9.6, 1170, 10.4, { ease: 'sine.inOut' });
   // the farmer brings a basket down from the terraces, stops and points at the ship
-  farmer.walk(tl, 14.4, 1640, 6.6, { ease: 'sine.inOut' });
-  tl.set(farmer.p, { facing: -1 }, 21.1);
+  farmer.walk(tl, 14.4, 1490, 6.6, { ease: 'sine.inOut' });
   farmer.go(tl, 21.3, 1.0, { armF: 80, elbowF: 8, head: -3 });
   farmer.go(tl, 25.2, 1.0, { armF: 8, elbowF: 14, head: 0 });
-  // the trader comes ashore from the landing and gestures as he talks
+  // the trader comes up from the landing and gestures as he talks
   trader.p.opacity = 0;
-  tl.fromTo(trader.p, { opacity: 0 }, { opacity: 1, duration: 0.5, ease: 'none', immediateRender: false }, 20.2);
-  trader.walk(tl, 20.3, 1300, 4.2, { ease: 'sine.out' });
+  tl.fromTo(trader.p, { opacity: 0 }, { opacity: 1, duration: 0.6, ease: 'none', immediateRender: false }, 20.0);
+  trader.walk(tl, 20.1, 1335, 4.2, { ease: 'sine.out' });
+  tl.set(trader.p, { facing: 1 }, 24.4);
   trader.go(tl, 24.6, 0.9, 'talk');
   tl.to(trader.p, { elbowF: 92, duration: 0.42, yoyo: true, repeat: 5, ease: 'sine.inOut' }, 25.5);
   trader.go(tl, 28.4, 1.0, { armF: 10, elbowF: 18, lean: 1 });
-  // the planter kneels to set a sapling, stands, and waves to the ship
-  planter.set({ armF: 20, elbowF: 18, armB: 14, elbowB: 18 });
+  // the planter kneels to set a sapling, stands and waves to the ship
+  planter.set({ armF: 18, elbowF: 16, armB: 12, elbowB: 16 });
   planter.go(tl, 18.6, 1.4, 'crouch');
   tl.to(planter.p, { armF: 70, elbowF: 40, duration: 0.45, yoyo: true, repeat: 3, ease: 'sine.inOut' }, 20.0);
   planter.go(tl, 22.2, 1.2, { legF: 3, kneeF: 0, footF: 0, legB: -3, kneeB: 0, footB: 0, lean: 0, head: 0, armF: 8, elbowF: 16, armB: -6, elbowB: 12 });
   planter.go(tl, 23.4, 0.7, 'wave');
   tl.to(planter.p, { elbowF: 58, duration: 0.4, yoyo: true, repeat: 5, ease: 'sine.inOut' }, 24.1);
   planter.go(tl, 26.6, 0.9, { armF: 8, elbowF: 16, lean: 0, head: 0 });
-  tl.fromTo(sapling.firstElementChild, { scale: 0.2, opacity: 0, transformOrigin: '18% 92%' }, { scale: 1, opacity: 1, duration: 1.6, ease: 'back.out(1.8)', immediateRender: true }, 20.6);
+  gsap.set([sap1, sap2], { opacity: 0 });
+  tl.fromTo(sap1.firstElementChild, { scale: 0.3, transformOrigin: '50% 100%' }, { scale: 1, duration: 0.8, ease: 'back.out(2)', immediateRender: false }, 20.4);
+  tl.to(sap1, { opacity: 1, duration: 0.3 }, 20.4);
+  tl.to(sap2, { opacity: 1, duration: 0.6 }, 21.6);
+  tl.to(sap1, { opacity: 0, duration: 0.6 }, 21.8);
+  tl.fromTo(sap2.firstElementChild, { scale: 0.75, transformOrigin: '50% 100%' }, { scale: 1, duration: 0.9, ease: 'back.out(1.6)', immediateRender: false }, 21.6);
 
   // closing wide: the first palace worlds
-  const lblC = add(crete, S.mapLabel({ x: creteX, y: creteY - 150, dx: 0, dy: -70, title: 'CRETE', note: 'The Minoans', size: 24 }));
-  const lblM = add(mycL, S.mapLabel({ x: MYC.x - 10, y: MYC.y - 300, dx: 0, dy: -70, title: 'MYCENAE', note: 'The Mycenaeans', size: 26 }));
+  const lblC = add(world, S.mapLabel({ x: 501, y: 338, dx: 0, dy: -90, title: 'CRETE', note: 'The Minoans', size: 26 }));
+  const lblM = add(world, S.mapLabel({ x: 1985, y: 150, dx: 0, dy: -86, title: 'MYCENAE', note: 'The Mycenaeans', size: 28 }));
   gsap.set([lblC, lblM], { opacity: 0 });
   tl.to(lblC, { opacity: 1, duration: 1.1, ease: 'power2.out' }, 27.0);
   tl.to(lblM, { opacity: 1, duration: 1.1, ease: 'power2.out' }, 29.2);
