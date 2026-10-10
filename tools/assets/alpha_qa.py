@@ -62,7 +62,20 @@ def composite_strip(rgba, h=420):
     return np.hstack(out)
 
 
-def clean(rgba, speck=60, pad=6):
+def smooth_solid_rgb(rgba, sigma, solid_thr=0.96):
+    """Like nearest_solid_rgb, but a Gaussian-weighted average of the nearby solid colours (normalized
+    convolution), so wide translucent areas get smooth colour instead of nearest-pixel facets."""
+    a = rgba[..., 3].astype(np.float32) / 255
+    solid = (a >= solid_thr).astype(np.float32)
+    w = cv2.GaussianBlur(solid, (0, 0), sigma)
+    acc = cv2.GaussianBlur(rgba[..., :3].astype(np.float32) * solid[..., None], (0, 0), sigma)
+    near = nearest_solid_rgb(rgba, solid_thr).astype(np.float32)
+    k = np.clip(w / 0.05, 0, 1)[..., None]            # far from any solid pixel: fall back to nearest
+    ref = acc / np.maximum(w, 1e-6)[..., None] * k + near * (1 - k)
+    return np.clip(ref + 0.5, 0, 255).astype(np.uint8)
+
+
+def clean(rgba, speck=60, pad=6, smooth=0):
     a = rgba[..., 3].astype(np.float32) / 255
     # drop isolated specks / dust
     n, lab, st, _ = cv2.connectedComponentsWithStats((a > 0.04).astype(np.uint8), connectivity=8)
@@ -72,9 +85,10 @@ def clean(rgba, speck=60, pad=6):
             if st[i, 4] < max(speck, big * 0.0005):
                 a[lab == i] = 0
     a[a < 0.03] = 0
-    # defringe: semi-transparent pixels take the colour of the nearest solid pixel (no matte can survive)
+    # defringe: semi-transparent pixels take the colour of the nearest solid pixel (no matte can survive);
+    # smooth>0 averages nearby solid colours instead (thin translucent foliage would otherwise go faceted)
     tmp = rgba.copy(); tmp[..., 3] = (a * 255).astype(np.uint8)
-    ref = nearest_solid_rgb(tmp)
+    ref = smooth_solid_rgb(tmp, smooth) if smooth else nearest_solid_rgb(tmp)
     edge = (a > 0) & (a < 0.96)
     rgb = rgba[..., :3].copy()
     rgb[edge] = ref[edge]

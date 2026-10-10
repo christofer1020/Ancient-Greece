@@ -184,12 +184,12 @@ export function build(sc) {
   tl.fromTo(mist, { opacity: 1 }, { opacity: 0.12, duration: 14, ease: 'power1.inOut' }, 1);
 
   // the merchant ship sails in from the far side of the bay and grows as it approaches
-  tl.fromTo(shipP, { x: 760, y: 448, s: 0.34 }, { x: 1190, y: 600, s: 0.8, duration: 19, ease: 'sine.inOut' }, 2.5);
+  tl.fromTo(shipP, { x: 760, y: 448, s: 0.34 }, { x: 1245, y: 588, s: 0.8, duration: 19, ease: 'sine.inOut' }, 2.5);
 
   // watchers: the elder points out to sea, the child looks up and around
-  elder.go(tl, 3.4, 1.3, { armF: 100, elbowF: 4, lean: 2, head: -6 });
+  elder.go(tl, 3.4, 1.3, { armF: 124, elbowF: 4, lean: 1, head: -10 }); // up at the far ship
   elder.go(tl, 8.4, 1.5, { armF: 10, elbowF: 16, lean: 1, head: 0 });
-  elder.go(tl, 15.6, 1.3, { armF: 92, elbowF: 6, lean: 2, head: -4 });
+  elder.go(tl, 15.6, 1.3, { armF: 106, elbowF: 6, lean: 2, head: -6 }); // at the ship, now closer
   elder.go(tl, 20.0, 1.4, { armF: 9, elbowF: 16, lean: 0, head: 0 });
   tl.to(child.p, { head: -12, duration: 1.4, ease: 'sine.inOut' }, 4.2);
   tl.to(child.p, { head: 6, duration: 1.6, ease: 'sine.inOut' }, 10);
@@ -200,7 +200,7 @@ export function build(sc) {
   carrier.walk(tl, 10.5, 1040, 4.6, { ease: 'sine.inOut' });
   // the farmer brings a basket down from the terraces, stops and points at the ship
   farmer.walk(tl, 13.8, 1350, 7.4, { ease: 'sine.inOut' });
-  farmer.go(tl, 21.4, 1.0, { armF: 104, elbowF: 6, head: -6 });
+  farmer.go(tl, 21.4, 1.0, { armF: 134, elbowF: 6, head: -12 }); // up at the ship (it sits higher on screen: parallax)
   farmer.go(tl, 23.3, 0.9, { armF: 8, elbowF: 14, head: 0 });
   tl.set(farmer.p, { facing: 1 }, 24.4);
   // the trader comes up from the landing, stops facing the farmer and talks

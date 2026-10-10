@@ -475,9 +475,9 @@
    1323
   ],
   "qa": {
-   "dark_halo": 0.0,
+   "dark_halo": 0.0015,
    "edge_px": 235226,
-   "light_halo": 0.0,
+   "light_halo": 0.0028,
    "opaque_frac": 0.4256,
    "specks": 0
   },
@@ -496,9 +496,9 @@
    1305
   ],
   "qa": {
-   "dark_halo": 0.0,
+   "dark_halo": 0.0068,
    "edge_px": 138351,
-   "light_halo": 0.0,
+   "light_halo": 0.0032,
    "opaque_frac": 0.4523,
    "specks": 0
   },

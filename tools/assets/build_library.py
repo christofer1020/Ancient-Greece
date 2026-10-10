@@ -86,9 +86,9 @@ def save(rel, rgba, rt=None, q=88):
 manifest = {}
 
 
-def emit(rel, rgba, anchors=None, extra=None, rt=None, do_clean=True):
+def emit(rel, rgba, anchors=None, extra=None, rt=None, do_clean=True, smooth=0):
     if do_clean:
-        rgba, off = clean(rgba)
+        rgba, off = clean(rgba, smooth=smooth)
     else:
         off = (0, 0)
     H, W = rgba.shape[:2]
@@ -247,11 +247,11 @@ def build_rig_parts():
     emit('global/characters/char_hand_grip', hgrip, anchors={'wrist': top_center})
 
 
-def build_family(src_name, rels, group=30, order='x', anchors=None, rt=None, n=None):
+def build_family(src_name, rels, group=30, order='x', anchors=None, rt=None, n=None, smooth=0):
     src = load(src_name)
     parts = items(src, n or len(rels), group=group, order=order)
     for p, rel in zip(parts, rels):
-        emit(rel, p, anchors=(anchors or {}).get(rel.split('/')[-1], {'base': bottom_center}), rt=rt)
+        emit(rel, p, anchors=(anchors or {}).get(rel.split('/')[-1], {'base': bottom_center}), rt=rt, smooth=smooth)
 
 
 def build_ship():
@@ -317,7 +317,7 @@ def main():
         build_family('g16_olive_saplings', ['global/environment/env_olive_sapling_1', 'global/environment/env_olive_sapling_2', 'global/environment/env_olive_sapling_3'], group=25)
     if os.path.exists(os.path.join(GEN, 'g17_foreground_foliage.png')):
         build_family('g17_foreground_foliage', ['global/environment/env_fg_olive_branch', 'global/environment/env_fg_grass_clump'], group=40,
-                     anchors={'env_fg_olive_branch': {'top': top_center}, 'env_fg_grass_clump': {'base': bottom_center}})
+                     anchors={'env_fg_olive_branch': {'top': top_center}, 'env_fg_grass_clump': {'base': bottom_center}}, smooth=2.5)
     json.dump(manifest, open(MAN, 'w'), indent=1, sort_keys=True)
 
 
