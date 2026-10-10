@@ -1,12 +1,18 @@
 {
  "ch01": {
   "w": 3840,
-  "h": 1648,
-  "horizon": 716
+  "h": 2068,
+  "horizon": 1136,
+  "sky_ext": 420,
+  "master_h": 1648,
+  "top_cut_px": []
  },
  "intro": {
   "w": 3840,
-  "h": 1648,
-  "horizon": 797
+  "h": 2068,
+  "horizon": 1217,
+  "sky_ext": 420,
+  "master_h": 1648,
+  "top_cut_px": []
  }
 }

@@ -131,6 +131,10 @@
  },
  "global/costumes/costume_chiton_farmer": {
   "anchors": {
+   "armhole": [
+    0.22,
+    0.12
+   ],
    "collar": [
     0.4763,
     0.0077
@@ -138,8 +142,16 @@
    "hem": [
     0.5175,
     0.9912
+   ],
+   "shoulderF": [
+    0.66,
+    0.07
    ]
   },
+  "armhole_r": [
+   0.045,
+   0.07
+  ],
   "h": 460,
   "master": [
    400,
@@ -157,6 +169,10 @@
  },
  "global/costumes/costume_exomis_worker": {
   "anchors": {
+   "armhole": [
+    0.265,
+    0.17
+   ],
    "collar": [
     0.4835,
     0.0075
@@ -164,8 +180,16 @@
    "hem": [
     0.5077,
     0.9914
+   ],
+   "shoulderF": [
+    0.7,
+    0.09
    ]
   },
+  "armhole_r": [
+   0.06,
+   0.11
+  ],
   "h": 460,
   "master": [
    455,
@@ -183,6 +207,10 @@
  },
  "global/costumes/costume_himation_elder": {
   "anchors": {
+   "armhole": [
+    0.18,
+    0.12
+   ],
    "collar": [
     0.4247,
     0.0066
@@ -190,8 +218,16 @@
    "hem": [
     0.4506,
     0.9934
+   ],
+   "shoulderF": [
+    0.62,
+    0.07
    ]
   },
+  "armhole_r": [
+   0.055,
+   0.08
+  ],
   "h": 460,
   "master": [
    405,
@@ -209,6 +245,10 @@
  },
  "global/costumes/costume_himation_trader": {
   "anchors": {
+   "armhole": [
+    0.175,
+    0.18
+   ],
    "collar": [
     0.3922,
     0.0071
@@ -216,8 +256,16 @@
    "hem": [
     0.4578,
     0.9919
+   ],
+   "shoulderF": [
+    0.66,
+    0.1
    ]
   },
+  "armhole_r": [
+   0.065,
+   0.115
+  ],
   "h": 460,
   "master": [
    450,
@@ -235,6 +283,10 @@
  },
  "global/costumes/costume_peplos": {
   "anchors": {
+   "armhole": [
+    0.195,
+    0.13
+   ],
    "collar": [
     0.4618,
     0.0066
@@ -242,8 +294,16 @@
    "hem": [
     0.4828,
     0.9934
+   ],
+   "shoulderF": [
+    0.66,
+    0.08
    ]
   },
+  "armhole_r": [
+   0.06,
+   0.085
+  ],
   "h": 460,
   "master": [
    406,
@@ -261,6 +321,10 @@
  },
  "global/costumes/costume_tunic_child": {
   "anchors": {
+   "armhole": [
+    0.18,
+    0.17
+   ],
    "collar": [
     0.4885,
     0.009
@@ -268,8 +332,16 @@
    "hem": [
     0.4949,
     0.9897
+   ],
+   "shoulderF": [
+    0.68,
+    0.1
    ]
   },
+  "armhole_r": [
+   0.07,
+   0.12
+  ],
   "h": 460,
   "master": [
    392,
@@ -936,8 +1008,8 @@
     0.9939
    ],
    "yard": [
-    0.3213,
-    0.1366
+    0.3359,
+    0.1336
    ]
   },
   "h": 602,
@@ -961,8 +1033,8 @@
     0.9939
    ],
    "yard": [
-    0.3213,
-    0.1366
+    0.3359,
+    0.1336
    ]
   },
   "h": 602,

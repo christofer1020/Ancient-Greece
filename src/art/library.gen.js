@@ -45,7 +45,7 @@ import a41 from '../../assets/global/ships/ship_fishing_boat.webp';
 import a42 from '../../assets/global/ships/ship_merchant.webp';
 import a43 from '../../assets/global/ships/ship_merchant_sail.webp';
 import a44 from '../../assets/global/ships/ship_small_sail.webp';
-import a45 from '../../assets/chapter-01/ch01_env_world.webp';
+import a45 from '../../assets/chapter-01/ch01_env.webp';
 import a46 from '../../assets/chapter-01/ch01_sea_mask.webp';
 import a47 from '../../assets/intro/intro_env.webp';
 import a48 from '../../assets/intro/intro_sea_mask.webp';
@@ -57,12 +57,12 @@ export const LIB = {
   char_hand_grip: { src: a3, w: 35, h: 64, an: {"wrist":[0.3927,0.0175]} },
   char_hand_open: { src: a4, w: 31, h: 64, an: {"wrist":[0.371,0.0173]} },
   char_water_carrier_full: { src: a5, w: 158, h: 600, an: {"base":[0.411,0.9935]} },
-  costume_chiton_farmer: { src: a6, w: 203, h: 460, an: {"collar":[0.4763,0.0077],"hem":[0.5175,0.9912]}, upx: 0.16394 },
-  costume_exomis_worker: { src: a7, w: 225, h: 460, an: {"collar":[0.4835,0.0075],"hem":[0.5077,0.9914]}, upx: 0.15895 },
-  costume_himation_elder: { src: a8, w: 154, h: 460, an: {"collar":[0.4247,0.0066],"hem":[0.4506,0.9934]}, upx: 0.21881 },
-  costume_himation_trader: { src: a9, w: 210, h: 460, an: {"collar":[0.3922,0.0071],"hem":[0.4578,0.9919]}, upx: 0.16843 },
-  costume_peplos: { src: a10, w: 153, h: 460, an: {"collar":[0.4618,0.0066],"hem":[0.4828,0.9934]}, upx: 0.22078 },
-  costume_tunic_child: { src: a11, w: 231, h: 460, an: {"collar":[0.4885,0.009],"hem":[0.4949,0.9897]}, upx: 0.13338 },
+  costume_chiton_farmer: { src: a6, w: 203, h: 460, an: {"armhole":[0.22,0.12],"collar":[0.4763,0.0077],"hem":[0.5175,0.9912],"shoulderF":[0.66,0.07]}, upx: 0.16394, armholeR: [0.045, 0.07] },
+  costume_exomis_worker: { src: a7, w: 225, h: 460, an: {"armhole":[0.265,0.17],"collar":[0.4835,0.0075],"hem":[0.5077,0.9914],"shoulderF":[0.7,0.09]}, upx: 0.15895, armholeR: [0.06, 0.11] },
+  costume_himation_elder: { src: a8, w: 154, h: 460, an: {"armhole":[0.18,0.12],"collar":[0.4247,0.0066],"hem":[0.4506,0.9934],"shoulderF":[0.62,0.07]}, upx: 0.21881, armholeR: [0.055, 0.08] },
+  costume_himation_trader: { src: a9, w: 210, h: 460, an: {"armhole":[0.175,0.18],"collar":[0.3922,0.0071],"hem":[0.4578,0.9919],"shoulderF":[0.66,0.1]}, upx: 0.16843, armholeR: [0.065, 0.115] },
+  costume_peplos: { src: a10, w: 153, h: 460, an: {"armhole":[0.195,0.13],"collar":[0.4618,0.0066],"hem":[0.4828,0.9934],"shoulderF":[0.66,0.08]}, upx: 0.22078, armholeR: [0.06, 0.085] },
+  costume_tunic_child: { src: a11, w: 231, h: 460, an: {"armhole":[0.18,0.17],"collar":[0.4885,0.009],"hem":[0.4949,0.9897],"shoulderF":[0.68,0.1]}, upx: 0.13338, armholeR: [0.07, 0.12] },
   env_agave_a: { src: a12, w: 560, h: 513, an: {"base":[0.4735,0.9881]} },
   env_cloud_a: { src: a13, w: 1000, h: 328, an: {"base":[0.3741,0.9815]} },
   env_cloud_b: { src: a14, w: 947, h: 291, an: {"base":[0.5185,0.9725]} },
@@ -93,11 +93,11 @@ export const LIB = {
   prop_pithos: { src: a39, w: 243, h: 300, an: {"base":[0.4891,0.9906]} },
   prop_staff: { src: a40, w: 31, h: 360, an: {"base":[0.5818,0.993],"top":[0.4818,0.0055]} },
   ship_fishing_boat: { src: a41, w: 360, h: 181, an: {"base":[0.5211,0.9807]} },
-  ship_merchant: { src: a42, w: 900, h: 602, an: {"keel":[0.5,0.9939],"yard":[0.3213,0.1366]} },
-  ship_merchant_sail: { src: a43, w: 900, h: 602, an: {"keel":[0.5,0.9939],"yard":[0.3213,0.1366]} },
+  ship_merchant: { src: a42, w: 900, h: 602, an: {"keel":[0.5,0.9939],"yard":[0.3359,0.1336]} },
+  ship_merchant_sail: { src: a43, w: 900, h: 602, an: {"keel":[0.5,0.9939],"yard":[0.3359,0.1336]} },
   ship_small_sail: { src: a44, w: 343, h: 360, an: {"base":[0.4449,0.9905]} },
-  ch01_env: { src: a45, w: 3840, h: 1648, horizon: 716 },
-  ch01_sea_mask: { src: a46, w: 3840, h: 1648, horizon: 716 },
-  intro_env: { src: a47, w: 3840, h: 1648, horizon: 797 },
-  intro_sea_mask: { src: a48, w: 3840, h: 1648, horizon: 797 },
+  ch01_env: { src: a45, w: 3840, h: 2068, horizon: 1136, skyExt: 420, masterH: 1648 },
+  ch01_sea_mask: { src: a46, w: 3840, h: 2068, horizon: 1136, skyExt: 420, masterH: 1648 },
+  intro_env: { src: a47, w: 3840, h: 2068, horizon: 1217, skyExt: 420, masterH: 1648 },
+  intro_sea_mask: { src: a48, w: 3840, h: 2068, horizon: 1217, skyExt: 420, masterH: 1648 },
 };

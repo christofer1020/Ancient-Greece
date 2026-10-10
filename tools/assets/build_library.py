@@ -208,12 +208,29 @@ def build_heads_b():
         manifest[f'global/heads/{nm}']['upx'] = round(upx, 5)
 
 
+# Back armhole (centre + radii, fractions of the trimmed costume image), measured by eye on the masters:
+# the rig fills it with limb ink and roots the back arm inside it, so the arm comes out of the sleeve.
+ARMHOLE = {
+    'costume_himation_elder': (0.18, 0.12, 0.055, 0.08), 'costume_peplos': (0.195, 0.13, 0.06, 0.085),
+    'costume_chiton_farmer': (0.22, 0.12, 0.045, 0.07), 'costume_tunic_child': (0.18, 0.17, 0.07, 0.12),
+    'costume_himation_trader': (0.175, 0.18, 0.065, 0.115), 'costume_exomis_worker': (0.265, 0.17, 0.06, 0.11),
+}
+# Front shoulder point (where the near arm roots), same convention.
+SHOULDER_F = {
+    'costume_himation_elder': (0.62, 0.07), 'costume_peplos': (0.66, 0.08), 'costume_chiton_farmer': (0.66, 0.07),
+    'costume_tunic_child': (0.68, 0.1), 'costume_himation_trader': (0.66, 0.1), 'costume_exomis_worker': (0.7, 0.09),
+}
+
+
 def build_costumes(src_name, names, knee_idx):
     src = load(src_name)
     gs = items(src, 3, group=20)
     cleaned = []
     for g, nm in zip(gs, names):
         c = emit(f'global/costumes/{nm}', g, anchors={'collar': collar, 'hem': bottom_center})
+        ax, ay, rx, ry = ARMHOLE[nm]
+        manifest[f'global/costumes/{nm}']['anchors'].update(armhole=[ax, ay], shoulderF=list(SHOULDER_F[nm]))
+        manifest[f'global/costumes/{nm}']['armhole_r'] = [rx, ry]
         cleaned.append(c)
     # scale: knee-length garments span shoulder (0.168H) to knee hem (0.67H)
     hs = [cleaned[i].shape[0] for i in knee_idx]
@@ -241,30 +258,38 @@ def build_ship():
     src = load('g02_ship_merchant')
     rgba, off = clean(src)
     a = rgba[..., 3] > 128
-    # sail: the large cream region (light, low saturation) -> its own aligned overlay
+    # sail: low-saturation light canvas above the deck -> largest blob -> convex hull (smooth outline that
+    # contains the whole sail, lit and shaded panels, plus the rigging crossing it)
     hsv = cv2.cvtColor(rgba[..., :3], cv2.COLOR_RGB2HSV)
-    cream = a & (hsv[..., 2] > 170) & (hsv[..., 1] < 80)
-    cream = cv2.morphologyEx(cream.astype(np.uint8), cv2.MORPH_CLOSE, np.ones((9, 9), np.uint8))
-    n, lab, st, _ = cv2.connectedComponentsWithStats(cream, 8)
+    Hh = rgba.shape[0]
+    canvas = a & (hsv[..., 1] < 95) & (hsv[..., 2] > 125)
+    canvas[int(Hh * 0.66):] = False
+    canvas = cv2.morphologyEx(canvas.astype(np.uint8), cv2.MORPH_CLOSE, np.ones((15, 15), np.uint8))
+    n, lab, st, _ = cv2.connectedComponentsWithStats(canvas, 8)
     big = 1 + int(np.argmax(st[1:, 4]))
-    sail = (lab == big)
-    sail = cv2.morphologyEx(sail.astype(np.uint8), cv2.MORPH_CLOSE, np.ones((25, 25), np.uint8)).astype(bool)
-    # fill holes (seam lines) inside the sail
-    inv = (~sail).astype(np.uint8)
-    n2, lab2, st2, _ = cv2.connectedComponentsWithStats(inv, 4)
-    for i in range(1, n2):
-        x, y, w, h, ar = st2[i]
-        if x > 0 and y > 0 and x + w < sail.shape[1] and y + h < sail.shape[0]:
-            sail[lab2 == i] = True
+    cnts, _ = cv2.findContours((lab == big).astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+    hull = cv2.convexHull(max(cnts, key=cv2.contourArea))
+    sail = np.zeros(a.shape, np.uint8)
+    cv2.fillPoly(sail, [hull], 1)
+    sail = sail.astype(bool)
     ys, xs = np.where(sail)
     yard = (float(np.median(xs[ys < ys.min() + 12])), float(ys.min()))
     hull_rows = np.where(a.sum(1) > 0)[0]
     bottom = float(hull_rows.max())
     H, W = rgba.shape[:2]
-    rt = runtime_scale('global/ships/ship_merchant', W, H)
-    rw, rh = save('global/ships/ship_merchant', rgba, rt=rt)
+    # Feathered sail matte (anti-aliased outline, no stair steps). The overlay carries the sail; the hull
+    # image keeps only a thin rim of sail under the overlay's soft edge, so the two never need to line up
+    # when the sail billows (it only ever scales up from the yard).
+    soft = cv2.GaussianBlur(sail.astype(np.float32), (0, 0), 1.6)
+    inner = cv2.erode(sail.astype(np.uint8), cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (13, 13))).astype(np.float32)
+    inner = cv2.GaussianBlur(inner, (0, 0), 1.6)
+    a0 = rgba[..., 3].astype(np.float32) / 255
     sail_rgba = rgba.copy()
-    sail_rgba[..., 3] = np.where(sail, rgba[..., 3], 0)
+    sail_rgba[..., 3] = np.clip(a0 * soft * 255, 0, 255).astype(np.uint8)
+    hull_rgba = rgba.copy()
+    hull_rgba[..., 3] = np.clip(a0 * (1 - inner) * 255, 0, 255).astype(np.uint8)
+    rt = runtime_scale('global/ships/ship_merchant', W, H)
+    rw, rh = save('global/ships/ship_merchant', hull_rgba, rt=rt)
     save('global/ships/ship_merchant_sail', sail_rgba, rt=rt)  # same canvas and scale as the ship: registers exactly
     m = metrics(rgba)
     for rel in ('global/ships/ship_merchant', 'global/ships/ship_merchant_sail'):

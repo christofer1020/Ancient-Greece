@@ -8,11 +8,11 @@ import * as S from '../art/scenery.js';
 import { rng } from '../art/util.js';
 import { sprite, preloadImages } from '../art/sprite.js';
 import { Cutout } from '../art/cutout.js';
-import { plate, skyLife, swayAll } from '../art/stage.js';
+import { plate, skyLife, swayAll, screenToLayer, contactShadow } from '../art/stage.js';
 
 const USES = [
-  'intro_env', 'intro_sea_mask', 'env_cloud_a', 'env_cloud_c', 'fx_gull_up', 'fx_gull_down', 'fx_smoke_a',
-  'env_rock_a', 'env_fg_olive_branch', 'env_fg_grass_clump', 'prop_staff',
+  'intro_env', 'intro_sea_mask', 'env_cloud_a', 'env_cloud_b', 'env_cloud_c', 'fx_gull_up', 'fx_gull_down', 'fx_smoke_a',
+  'env_rock_a', 'env_fg_grass_clump', 'prop_staff',
   'char_hand_open', 'char_hand_grip', 'char_foot_sandal', 'costume_himation_elder', 'costume_tunic_child', 'head_elder_beard', 'head_child_curls',
 ];
 let ready = null;
@@ -69,43 +69,52 @@ export function build(sc) {
   const ground = sc.layer('ground', 1.0);
   const front = sc.layer('front', 1.25);
   const add = (L, m) => sc.add(L, m);
-  const GROUND = 902;
+  const GROUND = 880;
 
+  // wide framing: the Acropolis sits below the laurels and right of the title block, the elder and the
+  // child watch from the meadow at the lower left (the sky extension above the plate gives the headroom)
+  const CAM = { x: 1180, y: 320, z: 0.73 };
   plate(sc, world, 'intro_env', 'intro_sea_mask', { sun: [186, 359], horizon: 429, glitterW: 300, id: 'in' });
   // warm bloom around the low sun (code light)
   const glowG = S.rgrad([[0, '#FFE6B0', 0.85], [0.3, '#FFD38A', 0.3], [1, '#FFD38A', 0]]);
   const glow = add(world, `<g style="mix-blend-mode:screen"><defs>${glowG.def}</defs><circle cx="186" cy="359" r="460" fill="${glowG.ref}"/></g>`);
-  add(world, `<g style="mix-blend-mode:screen">${S.rays({ x: 186, y: 359, n: 11, spread: 120, dir: -40, len: 1600, op: 0.12 })}</g>`);
+  add(world, `<g style="mix-blend-mode:screen" opacity=".8">${S.rays({ x: 186, y: 359, n: 11, spread: 120, dir: -40, len: 1600, op: 0.1 })}</g>`);
   // a thread of smoke from the lower town
   const smoke = add(world, sprite('fx_smoke_a', { x: 1640, y: 515, w: 14, op: 0.5 }));
 
+  // drifting clouds through the open upper sky (clear of the painted clouds), gulls above the eyebrow line
   skyLife(sc, sky, {
-    clouds: [['env_cloud_a', 640, 120, 330, 2.2, 0.85], ['env_cloud_c', 1460, 50, 300, 1.6, 0.8]],
-    gulls: [[520, 70, 0.9, 24, 0], [600, 52, 0.75, 22, 1.1], [1500, 96, 0.7, 18, 2.4]],
+    clouds: [['env_cloud_b', 260, -235, 250, 2.0, 0.85], ['env_cloud_a', 820, -170, 380, 1.6, 0.8], ['env_cloud_c', 1640, -230, 330, 1.3, 0.8]],
+    gulls: [[520, -150, 0.9, 24, 0], [600, -172, 0.75, 22, 1.1], [1500, -120, 0.7, 18, 2.4]],
   });
 
   // the elder and the child from Chapter 1 watch the city wake
+  contactShadow(sc, ground, 548, GROUND + 5, 92);
   add(ground, sprite('env_rock_a', { x: 548, y: GROUND + 6, w: 92 }));
   const elder = new Cutout(sc, ground.g, { x: 430, y: GROUND, s: 1.28, costume: 'costume_himation_elder', head: 'head_elder_beard', seed: 1 });
   elder.set('relaxed');
-  elder.hold('B', 'prop_staff', { w: 11, grip: [0.5, 0.22], rot: 2, mode: 'world', behind: true });
+  elder.hold('B', 'prop_staff', { w: 11, grip: [0.5, 0.41], rot: 2, dx: -1.5, mode: 'world', behind: true });
   elder.set({ armB: 22, elbowB: 52, head: -2 });
   const child = new Cutout(sc, ground.g, { x: 540, y: GROUND - 8, s: 1.0, costume: 'costume_tunic_child', head: 'head_child_curls', seed: 2 });
-  child.set('sit'); child.p.lean = 8; child.p.head = 6;
+  child.set('sit'); child.p.head = 4;
 
   const sway = [];
-  const branch = add(front, `<g transform="translate(-60 -140)"><g>${sprite('env_fg_olive_branch', { x: 0, y: 0, w: 280, an: 'top' })}</g></g>`);
-  sway.push({ el: branch.firstElementChild, amp: 1.5, ph: 0.4, sp: 0.5 });
-  const grass = add(front, sprite('env_fg_grass_clump', { x: 140, y: 1030, w: 170 }));
+  const [gx, gy] = screenToLayer(front, CAM, 1585, 935);
+  const grass = add(front, sprite('env_fg_grass_clump', { x: gx, y: gy, w: 170 }));
   sway.push({ el: grass.firstElementChild, amp: 1.3, ph: 1.2, sp: 0.8 });
+  const [hx, hy] = screenToLayer(front, CAM, 30, 940);
+  const grass2 = add(front, sprite('env_fg_grass_clump', { x: hx, y: hy, w: 150, flip: true }));
+  sway.push({ el: grass2.firstElementChild, amp: 1.2, ph: 0.3, sp: 0.75 });
   swayAll(sc, sway);
 
   sc.particle('motes', { n: 40, color: ['#FFF0C8', '#FFE2A0'], op: 0.5, size: 2.2, vx: 0.006, vy: -0.004 });
 
-  // ---- looping drift (camera stays on the plate: z 0.95 -> frame 1684 x 947)
+  // ---- looping drift (the scene clamps the camera to the plate on every aspect ratio, keeping the
+  // ground line of the authored frame on wider screens)
   const tl = sc.tl;
-  sc.cam.x = 1160; sc.cam.y = 456; sc.cam.z = 0.95;
-  tl.to(sc.cam, { x: 1230, y: 446, z: 0.965, duration: 26, ease: 'sine.inOut', yoyo: true, repeat: -1 }, 0);
+  sc.anchorY = 1;
+  sc.cam.x = CAM.x; sc.cam.y = CAM.y; sc.cam.z = CAM.z;
+  tl.to(sc.cam, { x: 1225, y: 326, z: 0.75, duration: 26, ease: 'sine.inOut', yoyo: true, repeat: -1 }, 0);
   tl.to(glow, { opacity: 0.7, duration: 7, ease: 'sine.inOut', yoyo: true, repeat: -1 }, 0);
   tl.to(child.p, { head: -8, duration: 3.5, ease: 'sine.inOut', yoyo: true, repeat: -1, repeatDelay: 2.5 }, 2);
   tl.to(elder.p, { head: -6, lean: 2, duration: 4.5, ease: 'sine.inOut', yoyo: true, repeat: -1, repeatDelay: 3 }, 5);

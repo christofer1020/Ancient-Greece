@@ -140,8 +140,26 @@ export class Scene {
   // ------------------------------------------------------------- camera
   size() {
     const w = this.host.clientWidth || 1600, h = this.host.clientHeight || 900;
+    this.hostW = w; this.hostH = h;
     this.unit = Math.min(w / W, h / H);
     this.dirty = true;
+  }
+
+  /** Camera after the optional bounds clamp. `this.bounds` = {x, y, w, h} of a painted plate in depth-1
+   *  world units: the view is zoomed in just enough and kept inside it, so no aspect ratio (4:3, 16:10,
+   *  ultrawide) ever shows past the painting. When the clamp has to zoom in further than authored, the
+   *  frame would lose its top and bottom evenly; `this.anchorY` (0 top, 0.5 centre, 1 bottom) keeps that
+   *  edge of the authored 16:9 frame instead, so grounded scenes keep their ground line. The timeline's
+   *  camera values are not modified. */
+  view() {
+    const c = this.cam, B = this.bounds;
+    if (!B) return c;
+    const u = this.unit, vw = this.hostW / u, vh = this.hostH / u;
+    const z = Math.max(c.z, vw / B.w, vh / B.h);
+    const hw = vw / (2 * z), hh = vh / (2 * z);
+    const yA = c.y + (H / (2 * c.z) - hh) * (2 * (this.anchorY ?? 0.5) - 1);
+    const x = clamp(c.x, B.x + hw, B.x + B.w - hw), y = clamp(yA, B.y + hh, B.y + B.h - hh);
+    return { x, y, z, sx: c.sx, sy: c.sy, rot: c.rot };
   }
 
   /** Tween camera on a timeline. */
@@ -151,7 +169,7 @@ export class Scene {
   }
 
   applyCam() {
-    const c = this.cam, u = this.unit;
+    const c = this.view(), u = this.unit;
     const k = this.reduced ? 0.4 : 1;
     for (const L of this.layers) {
       const p = L.depth;

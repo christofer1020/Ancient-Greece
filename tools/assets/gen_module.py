@@ -16,14 +16,15 @@ for path in sorted(lib):
     if m.get('anchors'): extra += ', an: ' + json.dumps(m['anchors'], separators=(',', ':'))
     # upx in the manifest is rig units per MASTER px; the runtime file may be smaller
     if 'upx' in m: extra += f", upx: {round(m['upx'] * m['master'][0] / m['w'], 5)}"
+    if 'armhole_r' in m: extra += ', armholeR: ' + json.dumps(m['armhole_r'])
     entries.append(f"  {key}: {{ src: a{i}, w: {m['w']}, h: {m['h']}{extra} }},")
     i += 1
-PL = [('ch01_env', 'chapter-01/ch01_env_world.webp', 'ch01'), ('ch01_sea_mask', 'chapter-01/ch01_sea_mask.webp', 'ch01'),
+PL = [('ch01_env', 'chapter-01/ch01_env.webp', 'ch01'), ('ch01_sea_mask', 'chapter-01/ch01_sea_mask.webp', 'ch01'),
       ('intro_env', 'intro/intro_env.webp', 'intro'), ('intro_sea_mask', 'intro/intro_sea_mask.webp', 'intro')]
 for key, p, grp in PL:
     m = plates[grp]
     lines.append(f"import a{i} from '{rel(p)}';")
-    entries.append(f"  {key}: {{ src: a{i}, w: {m['w']}, h: {m['h']}, horizon: {m['horizon']} }},")
+    entries.append(f"  {key}: {{ src: a{i}, w: {m['w']}, h: {m['h']}, horizon: {m['horizon']}, skyExt: {m['sky_ext']}, masterH: {m['master_h']} }},")
     i += 1
 lines += ['', 'export const LIB = {'] + entries + ['};']
 open(out, 'w').write('\n'.join(lines) + '\n')

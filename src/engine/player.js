@@ -233,7 +233,9 @@ export class Player {
   // ------------------------------------------------------------------ navigation
   /** Start the intro scene (title screen). */
   async showTitle() {
+    const token = this.nav;
     const mod = await this.loadModule(-1);
+    if (token !== this.nav) return; // the visitor already navigated away while the title loaded
     this.mount(-1, mod);
     this.master.play();
     this.state = 'title';
@@ -248,18 +250,20 @@ export class Player {
     if (this.state === 'title') return;
     const token = ++this.nav;
     this.closeMenu(false); this.hideEnd();
-    const mod = await this.loadModule(-1);
-    if (token !== this.nav) return;
+    const loading = this.loadModule(-1);
     this.curTl?.kill();
     this.audio.setChapter(-1);
     this.setState('curtain');
     this.fillCurtain(null);
     const tl = this.curTl = gsap.timeline();
     this.curtainIn(tl);
+    const mod = await loading; // the curtain covers the stage while the scene loads
+    if (token !== this.nav) return;
     tl.call(() => { this.mount(-1, mod); this.master.play(); }, null, '>');
     tl.add(() => {}, '+=0.35');
     this.curtainOut(tl);
     tl.call(() => { this.setState('title'); this.curTl = null; this.app.dataset.curtain = ''; }, null, '>');
+    if (!tl.paused()) tl.play(tl.time()); // re-activate if the curtain-in already finished while loading
   }
 
   /** Go to chapter i. opts: { play, curtain, at } */
@@ -267,13 +271,15 @@ export class Player {
     i = clamp(i, 0, N - 1);
     const token = ++this.nav;
     this.closeMenu(false); this.hideEnd();
-    const mod = await this.loadModule(i);
-    if (token !== this.nav) return;
-    this.curTl?.kill();
-    this.userPaused = !play;
-    this.audio.setChapter(i);
-
+    // start fetching now; with the curtain, the cover slides in at once and the chapter loads behind it,
+    // so a click is never left unanswered on a slow network
+    const loading = this.loadModule(i);
     if (!curtain) {
+      const mod = await loading;
+      if (token !== this.nav) return;
+      this.curTl?.kill();
+      this.userPaused = !play;
+      this.audio.setChapter(i);
       this.mount(i, mod);
       this.master.time(at, true);
       this.scene.frame(0, false);
@@ -283,11 +289,16 @@ export class Player {
       return;
     }
 
+    this.curTl?.kill();
+    this.userPaused = !play;
+    this.audio.setChapter(i);
     const ch = CHAPTERS[i];
     this.setState('curtain');
     this.fillCurtain(ch);
     const tl = this.curTl = gsap.timeline();
     this.curtainIn(tl);
+    const mod = await loading;
+    if (token !== this.nav) return;
     // swap scene under the cover
     tl.call(() => {
       this.mount(i, mod);
@@ -312,6 +323,7 @@ export class Player {
     this.curtainOut(tl, 'out');
     tl.call(() => { this.curTl = null; this.app.dataset.curtain = ''; }, null, '>');
     if (this.reduced) tl.timeScale(1.4);
+    if (!tl.paused()) tl.play(tl.time()); // re-activate if the curtain-in already finished while loading
   }
 
   curtainIn(tl) {

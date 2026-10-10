@@ -122,7 +122,10 @@ kbd { font: 500 .72em var(--font-ui); border: 1px solid currentColor; border-rad
 .begin-label { font: 600 .7rem/1 var(--font-ui); letter-spacing: .42em; text-transform: uppercase; padding-left: .42em; color: var(--blue); }
 .btn-link { background: none; border: 0; cursor: pointer; font: italic 500 1.12rem/1 var(--font-text); color: var(--charcoal); border-bottom: 1px solid rgba(42, 38, 35, .4); padding: 0 0 .15em; transition: color .3s, border-color .3s; }
 .btn-link:hover { color: var(--red); border-color: var(--red); }
-.intro-hint { position: absolute; left: 0; right: 0; bottom: calc(18px + env(safe-area-inset-bottom)); margin: 0; font: 500 .7rem/1 var(--font-ui); letter-spacing: .14em; color: #F7EFD9; text-shadow: 0 1px 8px rgba(30, 20, 10, .6); }
+/* legibility over the painted title art: a soft parchment glow behind the small intro text (design unchanged) */
+.intro-eyebrow, .intro-sub, .intro-themes, .begin-label, .btn-link { text-shadow: 0 0 10px rgba(255, 246, 224, .9), 0 0 3px rgba(255, 246, 224, .8), 0 1px 0 rgba(255, 246, 224, .6); }
+#app[data-layout="portrait"] .intro-eyebrow, #app[data-layout="portrait"] .intro-sub, #app[data-layout="portrait"] .intro-themes, #app[data-layout="portrait"] .begin-label, #app[data-layout="portrait"] .btn-link { text-shadow: none; }
+.intro-hint { position: absolute; left: 0; right: 0; bottom: calc(18px + env(safe-area-inset-bottom)); margin: 0; font: 500 .7rem/1 var(--font-ui); letter-spacing: .14em; color: #F7EFD9; text-shadow: 0 1px 8px rgba(30, 20, 10, .85), 0 0 2px rgba(30, 20, 10, .9); }
 .laurel { position: absolute; top: 50%; height: 1.5em; width: auto; aspect-ratio: 100 / 142; pointer-events: none; transform: translateY(-50%); opacity: .96; overflow: visible; }
 .laurel-l { left: 0; }
 .laurel-r { right: 0; }
