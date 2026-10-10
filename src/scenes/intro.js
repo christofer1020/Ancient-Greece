@@ -73,7 +73,7 @@ export function build(sc) {
 
   // wide framing: the Acropolis sits below the laurels and right of the title block, the elder and the
   // child watch from the meadow at the lower left (the sky extension above the plate gives the headroom)
-  const CAM = { x: 1180, y: 320, z: 0.73 };
+  const CAM = { x: 1180, y: 302, z: 0.7 };   // y rests the 16:9 frame on the plate's bottom edge (945 - 450 / z)
   plate(sc, world, 'intro_env', 'intro_sea_mask', { sun: [186, 359], horizon: 429, glitterW: 300, id: 'in' });
   // warm bloom around the low sun (code light)
   const glowG = S.rgrad([[0, '#FFE6B0', 0.85], [0.3, '#FFD38A', 0.3], [1, '#FFD38A', 0]]);
@@ -114,7 +114,7 @@ export function build(sc) {
   const tl = sc.tl;
   sc.anchorY = 1;
   sc.cam.x = CAM.x; sc.cam.y = CAM.y; sc.cam.z = CAM.z;
-  tl.to(sc.cam, { x: 1225, y: 326, z: 0.75, duration: 26, ease: 'sine.inOut', yoyo: true, repeat: -1 }, 0);
+  tl.to(sc.cam, { x: 1225, y: 320, z: 0.72, duration: 26, ease: 'sine.inOut', yoyo: true, repeat: -1 }, 0);
   tl.to(glow, { opacity: 0.7, duration: 7, ease: 'sine.inOut', yoyo: true, repeat: -1 }, 0);
   tl.to(child.p, { head: -8, duration: 3.5, ease: 'sine.inOut', yoyo: true, repeat: -1, repeatDelay: 2.5 }, 2);
   tl.to(elder.p, { head: -6, lean: 2, duration: 4.5, ease: 'sine.inOut', yoyo: true, repeat: -1, repeatDelay: 3 }, 5);

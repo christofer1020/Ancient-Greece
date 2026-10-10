@@ -28,7 +28,7 @@ from PIL import Image
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 OUT = {'ch01': os.path.join(ROOT, 'assets', 'chapter-01'), 'intro': os.path.join(ROOT, 'assets', 'intro')}
 DBG = os.environ.get('PLATE_DEBUG')
-SKY_EXT = 420  # px of extended sky (= 255 scene units at the 1.648 px/unit plate scale)
+SKY_EXT = 640  # px of extended sky (= 388 scene units at the 1.648 px/unit plate scale)
 
 
 def rgb(path):

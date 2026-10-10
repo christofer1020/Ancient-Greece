@@ -1,17 +1,17 @@
 {
  "ch01": {
   "w": 3840,
-  "h": 2068,
-  "horizon": 1136,
-  "sky_ext": 420,
+  "h": 2288,
+  "horizon": 1356,
+  "sky_ext": 640,
   "master_h": 1648,
   "top_cut_px": []
  },
  "intro": {
   "w": 3840,
-  "h": 2068,
-  "horizon": 1217,
-  "sky_ext": 420,
+  "h": 2288,
+  "horizon": 1437,
+  "sky_ext": 640,
   "master_h": 1648,
   "top_cut_px": []
  }

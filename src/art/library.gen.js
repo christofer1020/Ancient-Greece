@@ -96,8 +96,8 @@ export const LIB = {
   ship_merchant: { src: a42, w: 900, h: 602, an: {"keel":[0.5,0.9939],"yard":[0.3359,0.1336]} },
   ship_merchant_sail: { src: a43, w: 900, h: 602, an: {"keel":[0.5,0.9939],"yard":[0.3359,0.1336]} },
   ship_small_sail: { src: a44, w: 343, h: 360, an: {"base":[0.4449,0.9905]} },
-  ch01_env: { src: a45, w: 3840, h: 2068, horizon: 1136, skyExt: 420, masterH: 1648 },
-  ch01_sea_mask: { src: a46, w: 3840, h: 2068, horizon: 1136, skyExt: 420, masterH: 1648 },
-  intro_env: { src: a47, w: 3840, h: 2068, horizon: 1217, skyExt: 420, masterH: 1648 },
-  intro_sea_mask: { src: a48, w: 3840, h: 2068, horizon: 1217, skyExt: 420, masterH: 1648 },
+  ch01_env: { src: a45, w: 3840, h: 2288, horizon: 1356, skyExt: 640, masterH: 1648 },
+  ch01_sea_mask: { src: a46, w: 3840, h: 2288, horizon: 1356, skyExt: 640, masterH: 1648 },
+  intro_env: { src: a47, w: 3840, h: 2288, horizon: 1437, skyExt: 640, masterH: 1648 },
+  intro_sea_mask: { src: a48, w: 3840, h: 2288, horizon: 1437, skyExt: 640, masterH: 1648 },
 };

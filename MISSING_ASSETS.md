@@ -11,6 +11,7 @@ Shared conventions:
 - Generate on a native transparent background with GPT Image 2.5 (`background: transparent`). Use the canonical
   cast (`assets/global/characters/char_cast_canonical.png`) or the environment plate as the reference image.
 - Run through `tools/assets/build_library.py` afterwards.
+- Availability: GPT Image 2.5 on Higgsfield now needs a paid plan (the account is on the free plan with 8.83 credits left). ElevenLabs offers the same model (`creative_generate_image`), but its credits are reserved for narration. Each item below is one generation (about 1–1.25 credits).
 
 ---
 
@@ -37,7 +38,7 @@ Shared conventions:
 | **Description** | The same characters as the canonical cast (same head size, same limb thickness, same costumes), drawn in the poses where a cutout rig reads stiffest: kneeling to plant, the seated child, and the walk contact and passing poses for the long walks. |
 | **Where** | Chapter 1 cast. They would swap in for the rig during these actions. |
 | **Rigging** | None. Whole-pose swap, 6–8 drawings per action. |
-| **Fallback** | The hybrid cutout rig: 8-key-pose walk, crouch, sit, point, wave and talk poses. |
+| **Fallback** | The hybrid cutout rig: IK foot-locked walk, crouch, sit, point, wave and talk poses. |
 
 ## 3. Gull flap cycle (more frames)
 
@@ -70,10 +71,22 @@ Shared conventions:
 | **Files** | None needed. The title scene reuses the Chapter 1 elder and child. |
 | **Note** | If a different pair is wanted for the title, generate one head and one costume per role with the canonical cast as the reference image. The existing rig takes them unchanged. |
 
+## 6. Higher-resolution environment plates
+
+| | |
+|---|---|
+| **Files** | `assets/chapter-01/ch01_environment_master.png`, `assets/intro/intro_environment_master.png` (replacements) |
+| **Dimensions** | 5760 × 2472 or larger, or the same scene delivered as 2 × 2 tiles with overlap |
+| **Transparency** | No |
+| **Description** | The same compositions with more sky above the clouds (about 25% of the height), so the code sky extension is no longer needed. Foreground foliage should be painted as soft leaf clusters, not square dabs. |
+| **Where** | Both plates. The 3840 px masters are upscaled about 1.4–1.5× on 2× screens during Chapter 1's closer shots, which softens fine texture. |
+| **Fallback** | The current masters, with foliage softening and a 640 px code sky extension (`tools/assets/plates.py`). The camera is clamped to the plate at every aspect ratio. |
+
 ---
 
 ### Generated but not used yet (available in the library)
 
 - `env_olive_tree_a`, `env_cypress_a`: the plates already contain painted trees. These are for later chapters.
 - `env_olive_sapling_3`: the largest sapling stage. Its leaf clusters read less like olive than stages 1 and 2, so the scene stops at stage 2.
+- `char_cast_canonical.png` is the reference image for future character generations. It is not loaded at runtime and keeps the faint dust specks of the source image.
 - `env_cloud_a/b/c`, `env_shrub_a`, `prop_crate` and others are in use. The full list is in `assets/library.json`.

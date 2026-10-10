@@ -58,7 +58,7 @@ export function build(sc) {
   const dawn = add(world, `<g><defs>${dawnG.def}</defs><rect x="-200" y="-420" width="2730" height="${HORIZON + 440}" fill="${dawnG.ref}"/></g>`);
   const glowG = S.rgrad([[0, '#FFE6B0', 0.9], [0.3, '#FFD38A', 0.35], [1, '#FFD38A', 0]]);
   const glow = add(world, `<g style="mix-blend-mode:screen"><defs>${glowG.def}</defs><circle cx="757" cy="312" r="420" fill="${glowG.ref}"/></g>`);
-  const rays = add(world, `<g style="mix-blend-mode:screen" opacity=".85">${S.rays({ x: 757, y: 312, n: 13, spread: 150, dir: -90, len: 1400, op: 0.11 })}</g>`);
+  const rays = add(world, `<g style="mix-blend-mode:screen" opacity=".85">${S.rays({ x: 757, y: 312, n: 13, spread: 150, dir: -90, len: 760, op: 0.11 })}</g>`);
   // horizon haze, faded out towards the painted olive tree at the left edge
   const hzG = S.grad([[0, '#F7E4CC', 0], [0.5, '#F7E4CC', 0.85], [1, '#F7E4CC', 0]]);
   const hzX = S.grad([[0, '#fff', 0], [1, '#fff', 1]], { x1: 0, y1: 0, x2: 1, y2: 0 });
